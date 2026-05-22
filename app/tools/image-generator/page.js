@@ -40,14 +40,15 @@ export default function AIDashboard() {
       const res = await fetch("https://file.io/?expires=1d", { method: "POST", body: formData });
       const data = await res.json();
       if (data && data.success && data.link) {
-        setRefUrl(data.link);
+        const encodedUrl = encodeURIComponent(data.link);
+        setRefUrl(encodedUrl);
         addLog("تم رفع المرجع بنجاح ✓");
       } else {
         addLog("تحذير: استخدام معاينة محلية فقط");
       }
     } catch (err) {
-      console.log("Upload error:", err);
-      addLog("خطأ في الرفع، المتابعة بالمعاينة المحلية");    }
+      console.log("Upload error:", err);      addLog("خطأ في الرفع، المتابعة بالمعاينة المحلية");
+    }
     setUploading(false);
   };
 
@@ -71,8 +72,9 @@ export default function AIDashboard() {
     }
     
     let params = "?width=" + w + "&height=" + h + "&nologo=true&enhance=true&seed=" + Math.random();
-    if (refUrl && refUrl.startsWith("https://")) {
-      params = params + "&image=" + encodeURIComponent(refUrl) + "&weight=" + refStrength;
+    if (refUrl && refUrl.startsWith("http")) {
+      const encodedRef = encodeURIComponent(refUrl);
+      params = params + "&image=" + encodedRef + "&weight=" + refStrength;
       addLog("إدراج الصورة المرجعية (قوة: " + refStrength + "%)...");
     }
     
@@ -94,22 +96,38 @@ export default function AIDashboard() {
     };
     img.onerror = () => {
       addLog("خطأ في التوليد، حاول بوصف أبسط");
-      setLoading(false);
-    };
+      setLoading(false);    };
   };
-  const handleDownload = (e) => {
+
+  const handleDownload = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (!imageUrl) return;
-    const link = document.createElement("a");
-    link.href = imageUrl;
-    link.download = "ai-creator-" + Date.now() + ".png";
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    addLog("بدأ تحميل الصورة...");
+    addLog("جاري تحضير الصورة للتحميل...");
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = "generated-image.jpg";
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      addLog("تم بدء تحميل الصورة بصيغة .jpg ✓");
+    } catch (error) {
+      const link = document.createElement("a");
+      link.href = imageUrl;
+      link.download = "generated-image.jpg";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      addLog("تم فتح الصورة للتحميل اليدوي");
+    }
   };
 
   const clearHistory = () => {
@@ -127,8 +145,7 @@ export default function AIDashboard() {
       direction: "rtl",
       padding: "16px",
       paddingBottom: "40px"
-    }}>
-      <header style={{ textAlign: "center", marginBottom: "24px", padding: "20px", background: "rgba(30,30,50,0.6)", borderRadius: "16px", border: "1px solid rgba(100,150,255,0.3)", boxShadow: "0 0 20px rgba(100,150,255,0.1)" }}>
+    }}>      <header style={{ textAlign: "center", marginBottom: "24px", padding: "20px", background: "rgba(30,30,50,0.6)", borderRadius: "16px", border: "1px solid rgba(100,150,255,0.3)", boxShadow: "0 0 20px rgba(100,150,255,0.1)" }}>
         <h1 style={{ margin: 0, fontSize: "22px", fontWeight: "700", background: "linear-gradient(90deg, #60a5fa, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
           🎨 لوحة تحكم صناع المحتوى
         </h1>
@@ -145,7 +162,8 @@ export default function AIDashboard() {
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="اكتب وصف الصورة بالإنجليزية للحصول على أفضل نتائج..."            style={{ width: "100%", minHeight: "90px", padding: "12px", borderRadius: "10px", border: "1px solid #334155", background: "#0f0f1a", color: "#e2e8f0", fontSize: "14px", resize: "vertical", fontFamily: "inherit", marginBottom: "12px" }}
+            placeholder="اكتب وصف الصورة بالإنجليزية للحصول على أفضل نتائج..."
+            style={{ width: "100%", minHeight: "90px", padding: "12px", borderRadius: "10px", border: "1px solid #334155", background: "#0f0f1a", color: "#e2e8f0", fontSize: "14px", resize: "vertical", fontFamily: "inherit", marginBottom: "12px" }}
           />
           <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px" }}>📎 صورة مرجعية (اختياري):</label>
           <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading} style={{ fontSize: "13px", color: "#e2e8f0", marginBottom: "10px" }} />
@@ -176,8 +194,7 @@ export default function AIDashboard() {
           <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px" }}>
             🎯 شدة الالتزام بالمرجع: <span style={{ color: "#60a5fa", fontWeight: "600" }}>{refStrength}%</span>
           </label>
-          <input type="range" min="0" max="100" value={refStrength} onChange={(e) => setRefStrength(Number(e.target.value))} style={{ width: "100%", accentColor: "#60a5fa", marginBottom: "4px" }} />
-          <p style={{ fontSize: "11px", color: "#64748b", margin: "0" }}>منخفض = إبداع حر | مرتفع = دقة عالية في المحاكاة</p>
+          <input type="range" min="0" max="100" value={refStrength} onChange={(e) => setRefStrength(Number(e.target.value))} style={{ width: "100%", accentColor: "#60a5fa", marginBottom: "4px" }} />          <p style={{ fontSize: "11px", color: "#64748b", margin: "0" }}>منخفض = إبداع حر | مرتفع = دقة عالية في المحاكاة</p>
         </section>
 
         {/* Section 3: Output & Terminal */}
@@ -194,8 +211,9 @@ export default function AIDashboard() {
               <img src={imageUrl} alt="result" style={{ maxWidth: "100%", maxHeight: "180px", borderRadius: "8px" }} />
             ) : (
               <span style={{ color: "#64748b", fontSize: "13px" }}>الصورة ستظهر هنا بعد التوليد</span>
-            )}          </div>
-          <a href={imageUrl || "#"} onClick={handleDownload} target="_blank" rel="noopener noreferrer" style={{ display: "block", width: "100%", padding: "12px", textAlign: "center", background: imageUrl ? "linear-gradient(135deg, #16a34a, #22c55e)" : "#334155", color: "#fff", textDecoration: "none", borderRadius: "10px", fontWeight: "600", fontSize: "15px", cursor: imageUrl ? "pointer" : "not-allowed", opacity: imageUrl ? 1 : 0.6, transition: "all 0.2s" }}>
+            )}
+          </div>
+          <a href={imageUrl || "#"} onClick={handleDownload} style={{ display: "block", width: "100%", padding: "12px", textAlign: "center", background: imageUrl ? "linear-gradient(135deg, #16a34a, #22c55e)" : "#334155", color: "#fff", textDecoration: "none", borderRadius: "10px", fontWeight: "600", fontSize: "15px", cursor: imageUrl ? "pointer" : "not-allowed", opacity: imageUrl ? 1 : 0.6, transition: "all 0.2s" }}>
             ⬇️ تحميل الصورة النهائية
           </a>
         </section>
@@ -225,8 +243,7 @@ export default function AIDashboard() {
             {history.map((item, idx) => (
               <div key={idx} style={{ position: "relative", borderRadius: "8px", overflow: "hidden", border: "1px solid #334155", background: "#0f0f1a", cursor: "pointer" }} onClick={() => { setImageUrl(item.url); setPrompt(item.prompt); addLog("تم استرجاع صورة من السجل"); }}>
                 <img src={item.url} alt={item.prompt} style={{ width: "100%", height: "100px", objectFit: "cover" }} />
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(0,0,0,0.7)", padding: "4px 6px", fontSize: "10px", color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.prompt.slice(0, 30)}...</div>
-              </div>
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(0,0,0,0.7)", padding: "4px 6px", fontSize: "10px", color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.prompt.slice(0, 30)}...</div>              </div>
             ))}
           </div>
         )}
