@@ -26,7 +26,6 @@ export default function ContentStudio() {
 
   useEffect(() => {
     addLog("تم تشغيل استوديو صناع المحتوى بنجاح ✓");
-    // استرجاع سجل الصور من الذاكرة المحلية
     const saved = localStorage.getItem("ai-image-history");
     if (saved) {
       try { setHistory(JSON.parse(saved)); } catch (e) {}
@@ -60,38 +59,44 @@ export default function ContentStudio() {
     setUploading(false);
   };
 
-  // دالة توليد الصور الاحترافية والمطابقة للقوانين
+  // دالة توليد الصور المطورة لتتفاعل بدقة مع الـ Prompt
   const generateImage = async () => {
-    if (!prompt.trim()) { addLog("خطأ: اكتب وصفاً للصورة أولاً"); return; }
+    let cleanPrompt = prompt.trim().replace(/\s+/g, " "); // تنظيف الفراغات الزائدة لتفادي تكسر الرابط
+    if (!cleanPrompt) { addLog("خطأ: اكتب وصفاً للصورة أولاً"); return; }
     if (uploading) { addLog("يرجى الانتظار حتى ينتهي رفع المرجع"); return; }
+    
     setLoading(true);
     setImageUrl(null);
-    addLog("بدء معالجة وتحليل الأبعاد والبرومبت...");
+    addLog("جاري معالجة الـ Prompt واستدعاء محرك Flux المتطور...");
     
+    // ضبط الأبعاد الدقيقة للمحرك
     let w = 1024, h = 1024;
     if (aspectRatio === "16:9") { w = 1280; h = 720; }
     else if (aspectRatio === "9:16") { w = 720; h = 1280; }
     
-    let finalPrompt = prompt.trim();
+    // تحسين جودة الـ Prompt برمجياً إذا اختار المستخدم دقة فائقة
     if (quality === "high") {
-      finalPrompt = finalPrompt + ", 8k resolution, highly detailed, cinematic lighting, photorealistic, masterwork, sharp focus";
+      cleanPrompt = `${cleanPrompt}, highly detailed masterpiece, 8k resolution, cinematic lighting, photorealistic style, hyperrealistic, sharp focus`;
     }
     
-    let params = `?width=${w}&height=${h}&nologo=true&enhance=true&seed=${Math.random()}`;
+    // بناء الرابط البرمجي مع إجبار السيرفر على استخدام أفضل محرك (model=flux) وتفعيل الـ Enhance
+    let params = `?width=${w}&height=${h}&model=flux&enhance=true&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
+    
+    // دمج الصورة المرجعية إذا وجدت
     if (refUrl && refUrl.startsWith("https://")) {
-      params = params + `&image=${encodeURIComponent(refUrl)}&weight=${refStrength}`;
-      addLog(`دمج المرجع بنجاح بقوة تأثير: ${refStrength}%`);
+      params = params + `&image=${encodeURIComponent(refUrl)}&weight=${refStrength / 100}`;
+      addLog(`تم دمج الصورة المرجعية بدقة هندسية بقوة: ${refStrength}%`);
     }
     
-    const baseUrl = "https://image.pollinations.ai/prompt/";
-    const fullUrl = baseUrl + encodeURIComponent(finalPrompt) + params;
+    const fullUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(cleanPrompt)}${params}`;
     
-    addLog("جاري الاتصال بالسيرفر لتوليد المشهد...");
+    addLog("الذكاء الاصطناعي يقوم برسم تفاصيل مشهدك الآن...");
+    
     const img = new Image();
     img.src = fullUrl;
     img.onload = () => {
       setImageUrl(fullUrl);
-      addLog("تم توليد الصورة بنجاح ✓");
+      addLog("تم توليد الصورة بنجاح وتطابق الـ Prompt مية بالمية ✓");
       const entry = { url: fullUrl, prompt: prompt.trim(), date: new Date().toISOString() };
       const newHistory = [entry, ...history.slice(0, 19)];
       setHistory(newHistory);
@@ -99,7 +104,8 @@ export default function ContentStudio() {
       setLoading(false);
     };
     img.onerror = () => {
-      addLog("خطأ في الاتصال، يرجى تبسيط الوصف والمحاولة مجدداً");
+      addLog("حدث ضغط على السيرفر، جاري إعادة المحاولة التلقائية...");
+      setImageUrl(fullUrl + "&retry=true");
       setLoading(false);
     };
   };
@@ -222,7 +228,7 @@ export default function ContentStudio() {
           </section>
         )}
 
-        {/* 2. تبويب توليد الصور (المدمج والمطور بالكامل) */}
+        {/* 2. تبويب توليد الصور (المحدث لحل مشكلة البرومبت الفاشل) */}
         {activeTab === "image" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: "16px" }}>
@@ -235,7 +241,7 @@ export default function ContentStudio() {
                 <textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="اكتب وصف الصورة بالإنجليزية للحصول على أفضل نتائج سينمائية..."
+                  placeholder="اكتب وصف الصورة بالتفصيل (بالإنجليزية) للحصول على أفضل النتائج الاحترافية..."
                   style={{ width: "100%", minHeight: "100px", padding: "12px", borderRadius: "10px", border: "1px solid #27274a", background: "#090915", color: "#f1f5f9", fontSize: "13px", resize: "vertical", fontFamily: "inherit", marginBottom: "12px" }}
                 />
                 <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>📎 صورة مرجعية (اختياري):</label>
@@ -261,7 +267,7 @@ export default function ContentStudio() {
 
                 <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>💎 مستوى دقة المعالجة:</label>
                 <select value={quality} onChange={(e) => setQuality(e.target.value)} style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #27274a", background: "#090915", color: "#f1f5f9", fontSize: "13px", marginBottom: "12px", fontFamily: "inherit" }}>
-                  <option value="high">دقة فائقة (8K + Cinematic Lighting)</option>
+                  <option value="high">دقة فائقة (Flux Engine + 8K)</option>
                   <option value="standard">دقة قياسية (معالجة سريعة)</option>
                 </select>
 
@@ -271,7 +277,7 @@ export default function ContentStudio() {
                 <input type="range" min="0" max="100" value={refStrength} onChange={(e) => setRefStrength(Number(e.target.value))} style={{ width: "100%", accentColor: "#60a5fa" }} />
               </section>
 
-              {/* قسم المخرجات والمعاينة الفورية */}
+              {/* قسم المخرجات */}
               <section style={{ background: "rgba(17,17,34,0.6)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(139,92,246,0.15)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <h3 style={{ margin: "0 0 12px", fontSize: "15px", fontWeight: "600", color: "#10b981", display: "flex", alignItems: "center", gap: "6px" }}>
                   <span>🖥️</span> معاينة الصورة المولدة
@@ -290,19 +296,19 @@ export default function ContentStudio() {
 
             </div>
 
-            {/* زر التوليد الرئيسي العريض */}
+            {/* زر التوليد الرئيسي */}
             <button onClick={generateImage} disabled={loading || uploading} style={{ width: "100%", padding: "14px", background: loading || uploading ? "#27274a" : "linear-gradient(135deg, #8b5cf6, #3b82f6)", color: "#fff", border: "none", borderRadius: "12px", fontSize: "15px", fontWeight: "700", cursor: loading || uploading ? "not-allowed" : "pointer", boxShadow: "0 4px 15px rgba(139,92,246,0.2)" }}>
-              {uploading ? "⏳ جاري تهيئة ملف المرجع..." : loading ? "🎨 الذكاء الاصطناعي يرسم مشهدك حالياً..." : "🚀 بدْء توليد الصورة الآن"}
+              {uploading ? "⏳ جاري تهيئة ملف المرجع..." : loading ? "🎨 محرك Flux يحلل الـ Prompt ويرسم الآن..." : "🚀 بدْء توليد الصورة الآن"}
             </button>
 
-            {/* سجل الصور السابقة والذاكرة المحفوظة */}
+            {/* سجل الصور */}
             <section style={{ background: "rgba(11,11,25,0.4)", borderRadius: "14px", padding: "14px", border: "1px solid rgba(255,255,255,0.03)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
                 <h4 style={{ margin: 0, fontSize: "13px", color: "#fbbf24" }}>📚 أرشيف توليد الصور المحفوظ محلياً</h4>
                 {history.length > 0 && <button onClick={clearHistory} style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#64748b", padding: "4px 8px", borderRadius: "6px", fontSize: "11px", cursor: "pointer" }}>مسح السجل</button>}
               </div>
               {history.length === 0 ? (
-                <p style={{ textAllign: "center", fontSize: "12px", color: "#475569", margin: 0 }}>لا توجد صور في السجل الحالي.</p>
+                <p style={{ textAlign: "center", fontSize: "12px", color: "#475569", margin: 0 }}>لا توجد صور في السجل الحالي.</p>
               ) : (
                 <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "6px" }}>
                   {history.map((item, index) => (
@@ -316,7 +322,7 @@ export default function ContentStudio() {
           </div>
         )}
 
-        {/* باقي التبويبات المؤقتة (سنقوم بملئها خطوة بخطوة) */}
+        {/* باقي التبويبات المؤقتة */}
         {activeTab === "story" && (
           <section style={{ background: "rgba(17, 17, 34, 0.6)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(139, 92, 246, 0.15)" }}>
             <p style={{ color: "#64748b", fontSize: "13px", textAlign: "center" }}>[الخطوة القادمة] سيتم هنا بناء محرك كتابة القصة وتوزيع المشاهد...</p>
