@@ -39,7 +39,7 @@ export default function ContentStudio() {
     addLog("تم تشغيل استوديو صناع المحتوى بنجاح ✓");
   }, []);
 
-  // معالجة الصورة المرجعية وضمان رفعها
+  // معالجة الصورة المرجعية وضمان رفعها عبر سيرفر tmpfiles المستقر
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -47,17 +47,25 @@ export default function ContentStudio() {
     setRefFile(file);
     const localPreview = URL.createObjectURL(file);
     setRefUrl(localPreview);
-    addLog("جاري معالجة الصورة المرجعية للمطابقة الدقيقة...");
+    addLog("جاري الرفع على سيرفر مستقر للمطابقة...");
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch("https://file.io/?expires=1d", { method: "POST", body: formData });
+      
+      // الرفع على tmpfiles.org لضمان بقاء الرابط حياً ومتاحاً لمحرك الصور
+      const res = await fetch("https://tmpfiles.org/api/v1/upload", { 
+        method: "POST", 
+        body: formData 
+      });
       const data = await res.json();
-      if (data && data.success && data.link) {
-        setRefUrl(data.link);
-        addLog("تم قفل الهوية المرجعية بنجاح ✓ جاهز للتوليد متطابق");
+      
+      if (data && data.status === "success" && data.data && data.data.url) {
+        // تحويل الرابط إلى رابط مباشر قابل للقراءة من السيرفرات الخارجية مثل Pollinations
+        const directLink = data.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
+        setRefUrl(directLink);
+        addLog("تم قفل الهوية بنجاح ✓ الرابط مستقر وجاهز للتوليد");
       } else {
-        addLog("تنبيه: تم استخدام المعاينة المحلية فقط");
+        addLog("تنبيه: فشل استخراج الرابط المباشر، تم الاعتماد على المعاينة المحلية");
       }
     } catch (err) {
       addLog("خطأ في الرفع، سيتم الاعتماد على المعاينة المحلية");
@@ -228,7 +236,7 @@ export default function ContentStudio() {
       {/* محتويات الواجهات المتغيرة */}
       <div style={{ maxWidth: "1250px", margin: "0 auto", minHeight: "350px" }}>
         
-        {/* الواجهة الرئيسية المستعادة */}
+        {/* الواجهة الرئيسية */}
         {activeTab === "home" && (
           <section style={{ background: "rgba(17, 17, 34, 0.6)", borderRadius: "16px", padding: "20px", border: "1px solid rgba(139, 92, 246, 0.15)", textAlign: "center" }}>
             <div style={{ fontSize: "40px", marginBottom: "10px" }}>🚀</div>
@@ -322,7 +330,7 @@ export default function ContentStudio() {
           </div>
         )}
 
-        {/* الواجهات المؤقتة الأخرى */}
+        {/* الواجهات الأخرى */}
         {activeTab === "story" && (
           <section style={{ background: "rgba(17, 17, 34, 0.6)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(139, 92, 246, 0.15)" }}>
             <p style={{ color: "#64748b", fontSize: "13px", textAlign: "center" }}>[الخطوة القادمة] سيتم هنا بناء محرك كتابة القصة وتوزيع المشاهد...</p>
