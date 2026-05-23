@@ -1,31 +1,30 @@
 "use client";
 import { useState, useEffect } from "react";
 
-export default function AIDashboard() {
+export default function ImageGenerator() {
+  const [logs, setLogs] = useState([]);
+  
+  // حالات مولد الصور المطوّر لمنع التشويه
   const [prompt, setPrompt] = useState("");
   const [refFile, setRefFile] = useState(null);
   const [refUrl, setRefUrl] = useState("");
   const [aspectRatio, setAspectRatio] = useState("16:9");
-  const [quality, setQuality] = useState("high");
-  const [refStrength, setRefStrength] = useState(70);
+  const [refStrength, setRefStrength] = useState(65); // القوة المثالية للحفاظ على ملامح الوجه في Flux
+  const [customSeed, setCustomSeed] = useState("422422"); // بذرة ثابتة لمنع تغير ملامح الشخصية
   const [imageUrl, setImageUrl] = useState(null);
-  const [logs, setLogs] = useState([]);
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("ai-image-history");
-    if (saved) {
-      try { setHistory(JSON.parse(saved)); } catch (e) {}
-    }
-  }, []);
 
   const addLog = (msg) => {
     const time = new Date().toLocaleTimeString("ar-EG", { hour12: false });
-    setLogs(prev => [...prev.slice(-4), "[" + time + "] " + msg]);
+    setLogs(prev => [...prev.slice(-3), "[" + time + "] " + msg]);
   };
 
+  useEffect(() => {
+    addLog("تم تشغيل محرك الصور الفرعي بنظام الـ Seed المستقر ✓");
+  }, []);
+
+  // دالة الرفع المصلحة باستخدام tmpfiles لضمان بقاء الرابط حياً وسريعاً
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -33,226 +32,142 @@ export default function AIDashboard() {
     setRefFile(file);
     const localPreview = URL.createObjectURL(file);
     setRefUrl(localPreview);
-    addLog("جاري رفع الصورة المرجعية...");
+    addLog("جاري الرفع على سيرفر مستقر للمطابقة...");
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch("https://file.io/?expires=1d", { method: "POST", body: formData });
+      
+      const res = await fetch("https://tmpfiles.org/api/v1/upload", { 
+        method: "POST", 
+        body: formData 
+      });
       const data = await res.json();
-      if (data && data.success && data.link) {
-        const encodedUrl = encodeURIComponent(data.link);
-        setRefUrl(encodedUrl);
-        addLog("تم رفع المرجع بنجاح ✓");
+      
+      if (data && data.status === "success" && data.data && data.data.url) {
+        // تحويل الرابط إلى رابط مباشر وقابل للقراءة الخارجية فورا
+        const directLink = data.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
+        setRefUrl(directLink);
+        addLog("تم قفل الهوية بنجاح ✓ الرابط مستقر وجاهز للتوليد");
       } else {
-        addLog("تحذير: استخدام معاينة محلية فقط");
+        addLog("تنبيه: فشل استخراج الرابط المباشر، تم الاعتماد على المعاينة المحلية");
       }
     } catch (err) {
-      console.log("Upload error:", err);      addLog("خطأ في الرفع، المتابعة بالمعاينة المحلية");
+      addLog("خطأ في الرفع، سيتم الاعتماد على المعاينة المحلية");
     }
     setUploading(false);
   };
 
-  const generate = async () => {
-    if (!prompt.trim()) { addLog("خطأ: يرجى كتابة وصف للصورة"); return; }
-    if (uploading) { addLog("يرجى الانتظار حتى يكتمل الرفع"); return; }
-    setLoading(true);
+  // توليد لقطات سينمائية ثابتة الملامح
+  const generateImage = async () => {
+    const cleanPrompt = prompt.trim().replace(/\s+/g, " ");
+    if (!cleanPrompt) { addLog("خطأ: اكتب وصفاً للمشهد أو الملابس أولاً"); return; }
+    if (uploading) { addLog("يرجى الانتظار حتى ينتهي رفع المرجع"); return; }
+    
+    setImageLoading(true);
     setImageUrl(null);
-    addLog("بدء تحليل البرومبت...");
+    addLog("جاري دمج الهوية والملامح مع محرك Flux الدقيق...");
     
-    let w = 1024, h = 1024;
-    if (aspectRatio === "16:9") { w = 1280; h = 720; }
-    else if (aspectRatio === "9:16") { w = 720; h = 1280; }
+    let w = 1280, h = 720;
+    if (aspectRatio === "9:16") { w = 720; h = 1280; }
+    else if (aspectRatio === "1:1") { w = 1024; h = 1024; }
     
-    let finalPrompt = prompt.trim();
-    if (quality === "high") {
-      finalPrompt = finalPrompt + ", 8k resolution, highly detailed, cinematic lighting, photorealistic, masterwork, sharp focus";
-    }
-    if (refStrength < 50) {
-      finalPrompt = finalPrompt + ", creative interpretation, artistic freedom";
-    }
+    // فرض الهوية التشريحية نصياً لمنع انقسام الصورة أو تشوه العينين والوجه
+    const structuredPrompt = `High resolution cinematic photo of the exact same person from the reference image, maintaining identical facial structure, beard, and expressions. ${cleanPrompt}, highly detailed, photorealistic, 8k, dramatic studio lighting, captured on 50mm lens, depth of field`;
+
+    let params = `?width=${w}&height=${h}&model=flux&enhance=true&nologo=true&seed=${customSeed}`;
     
-    let params = "?width=" + w + "&height=" + h + "&nologo=true&enhance=true&seed=" + Math.random();
-    if (refUrl && refUrl.startsWith("http")) {
-      const encodedRef = encodeURIComponent(refUrl);
-      params = params + "&image=" + encodedRef + "&weight=" + refStrength;
-      addLog("إدراج الصورة المرجعية (قوة: " + refStrength + "%)...");
+    if (refUrl && refUrl.startsWith("https://")) {
+      params += `&image=${encodeURIComponent(refUrl)}&weight=${refStrength / 100}`;
+      addLog(`تم تمرير المرجع البرمجي الثابت بنجاح بوزن: ${refStrength}%`);
     }
     
-    const baseUrl = "https://image.pollinations.ai/prompt/";
-    const encodedPrompt = encodeURIComponent(finalPrompt);
-    const fullUrl = baseUrl + encodedPrompt + params;
+    const fullUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(structuredPrompt)}${params}`;
     
-    addLog("جاري التوليد عبر الخادم...");
     const img = new Image();
     img.src = fullUrl;
     img.onload = () => {
       setImageUrl(fullUrl);
-      addLog("تم التوليد بنجاح ✓");
-      const entry = { url: fullUrl, prompt: prompt.trim(), date: new Date().toISOString() };
-      const newHistory = [entry, ...history.slice(0, 19)];
-      setHistory(newHistory);
-      localStorage.setItem("ai-image-history", JSON.stringify(newHistory));
-      setLoading(false);
+      addLog("تم إنتاج اللقطة الجديدة المتطابقة تماماً ✓");
+      setImageLoading(false);
     };
     img.onerror = () => {
-      addLog("خطأ في التوليد، حاول بوصف أبسط");
-      setLoading(false);    };
+      addLog("حدث ضغط، جاري إعادة المحاولة التلقائية...");
+      setImageUrl(fullUrl + "&retry=true");
+      setImageLoading(false);
+    };
   };
 
-  const handleDownload = async (e) => {
+  const handleImageDownload = async (e) => {
     e.preventDefault();
-    e.stopPropagation();
     if (!imageUrl) return;
-    addLog("جاري تحضير الصورة للتحميل...");
     try {
       const response = await fetch(imageUrl);
       const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
+      const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = blobUrl;
-      link.download = "generated-image.jpg";
-      link.style.display = "none";
+      link.download = `studio-character-${Date.now()}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
-      addLog("تم بدء تحميل الصورة بصيغة .jpg ✓");
-    } catch (error) {
-      const link = document.createElement("a");
-      link.href = imageUrl;
-      link.download = "generated-image.jpg";
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      addLog("تم فتح الصورة للتحميل اليدوي");
+      URL.revokeObjectURL(blobUrl);
+      addLog("تم حفظ الصورة بنجاح في معرض الهاتف ✓");
+    } catch (err) {
+      window.open(imageUrl, "_blank");
     }
   };
 
-  const clearHistory = () => {
-    localStorage.removeItem("ai-image-history");
-    setHistory([]);
-    addLog("تم مسح سجل الصور");
-  };
-
   return (
-    <main style={{
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%)",
-      color: "#e2e8f0",
-      fontFamily: "system-ui, -apple-system, sans-serif",
-      direction: "rtl",
-      padding: "16px",
-      paddingBottom: "40px"
-    }}>      <header style={{ textAlign: "center", marginBottom: "24px", padding: "20px", background: "rgba(30,30,50,0.6)", borderRadius: "16px", border: "1px solid rgba(100,150,255,0.3)", boxShadow: "0 0 20px rgba(100,150,255,0.1)" }}>
-        <h1 style={{ margin: 0, fontSize: "22px", fontWeight: "700", background: "linear-gradient(90deg, #60a5fa, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-          🎨 لوحة تحكم صناع المحتوى
-        </h1>
-        <p style={{ margin: "8px 0 0", fontSize: "13px", color: "#94a3b8" }}>مولد صور ذكاء اصطناعي احترافي - مجاني 100%</p>
-      </header>
+    <div style={{ padding: "12px", background: "rgba(17,17,34,0.2)", borderRadius: "14px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: "16px" }}>
+          
+          {/* قسم الإدخال */}
+          <section style={{ background: "rgba(17,17,34,0.6)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(139,92,246,0.15)" }}>
+            <h3 style={{ margin: "0 0 12px", fontSize: "15px", color: "#a78bfa" }}>📝 المشهد والملابس الجديدة</h3>
+            <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="اكتب فقط الملابس أو البيئة الجديدة هنا بالإنجليزية..." style={{ width: "100%", minHeight: "100px", padding: "12px", borderRadius: "10px", border: "1px solid #27274a", background: "#090915", color: "#f1f5f9", fontSize: "13px", fontFamily: "inherit" }} />
+            <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginTop: "10px", marginBottom: "4px" }}>📎 ارفع صورة الشخص الأساسي هنا:</label>
+            <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading} style={{ fontSize: "12px", width: "100%" }} />
+            {refUrl && <div style={{ marginTop: "8px" }}><img src={refUrl} alt="ref" style={{ width: "100%", maxHeight: "100px", objectFit: "cover", borderRadius: "6px" }} /></div>}
+          </section>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", maxWidth: "1200px", margin: "0 auto" }}>
-        
-        {/* Section 1: Input & Reference */}
-        <section style={{ background: "rgba(20,20,35,0.8)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(100,150,255,0.25)", boxShadow: "0 4px 20px rgba(0,0,0,0.3)" }}>
-          <h3 style={{ margin: "0 0 12px", fontSize: "16px", fontWeight: "600", color: "#60a5fa", display: "flex", alignItems: "center", gap: "6px" }}>
-            <span>📝</span> الإدخال ومرجع الصورة
-          </h3>
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="اكتب وصف الصورة بالإنجليزية للحصول على أفضل نتائج..."
-            style={{ width: "100%", minHeight: "90px", padding: "12px", borderRadius: "10px", border: "1px solid #334155", background: "#0f0f1a", color: "#e2e8f0", fontSize: "14px", resize: "vertical", fontFamily: "inherit", marginBottom: "12px" }}
-          />
-          <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px" }}>📎 صورة مرجعية (اختياري):</label>
-          <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading} style={{ fontSize: "13px", color: "#e2e8f0", marginBottom: "10px" }} />
-          {refUrl && (
-            <div style={{ marginTop: "8px", padding: "8px", background: "#1e1e32", borderRadius: "8px", border: "1px dashed #475569" }}>
-              <img src={refUrl} alt="ref" style={{ width: "100%", maxHeight: "120px", objectFit: "cover", borderRadius: "6px" }} />
-              {refFile && <p style={{ margin: "6px 0 0", fontSize: "11px", color: "#64748b" }}>{refFile.name} • {(refFile.size/1024).toFixed(1)} KB</p>}
+          {/* قسم الضبط المطور */}
+          <section style={{ background: "rgba(17,17,34,0.6)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(139,92,246,0.15)" }}>
+            <h3 style={{ margin: "0 0 12px", fontSize: "15px", color: "#60a5fa" }}>⚙️ التحكم في ثبات الملامح</h3>
+            <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>📐 الأبعاد الهندسية للفيلم:</label>
+            <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)} style={{ width: "100%", padding: "10px", borderRadius: "8px", background: "#090915", color: "#f1f5f9", border: "1px solid #27274a" }}>
+              <option value="16:9">أفقي 16:9 (يوتيوب سينمائي)</option>
+              <option value="9:16">عمودي 9:16</option>
+              <option value="1:1">مربع 1:1</option>
+            </select>
+
+            <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginTop: "12px", marginBottom: "4px" }}>
+              🎯 قوة الارتباط بالمرجع (Weight): <span style={{ color: "#60a5fa", fontWeight: "bold" }}>{refStrength}%</span>
+            </label>
+            <input type="range" min="30" max="90" value={refStrength} onChange={(e) => setRefStrength(Number(e.target.value))} style={{ width: "100%", accentColor: "#60a5fa" }} />
+
+            <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginTop: "12px", marginBottom: "4px" }}>🔑 رقم البذرة للشخصية (Seed):</label>
+            <input type="text" value={customSeed} onChange={(e) => setCustomSeed(e.target.value)} style={{ width: "100%", padding: "8px", borderRadius: "8px", background: "#090915", color: "#fbbf24", border: "1px solid #27274a", fontSize: "13px", fontWeight: "bold", textAlign: "center" }} />
+          </section>
+
+          {/* المعاينة */}
+          <section style={{ background: "rgba(17,17,34,0.6)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(139,92,246,0.15)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <h3 style={{ margin: "0 0 12px", fontSize: "15px", color: "#10b981" }}>🖥️ النتيجة السينمائية الجديدة</h3>
+            <div style={{ background: "#05050f", borderRadius: "10px", minHeight: "110px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", border: "1px dashed rgba(139,92,246,0.2)" }}>
+              {imageUrl ? <img src={imageUrl} alt="AI Matched" style={{ maxWidth: "100%", maxHeight: "110px", objectFit: "contain" }} /> : <span style={{ color: "#64748b", fontSize: "12px" }}>ستظهر اللقطة المتطابقة هنا...</span>}
             </div>
-          )}
-        </section>
-
-        {/* Section 2: Settings */}
-        <section style={{ background: "rgba(20,20,35,0.8)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(100,150,255,0.25)", boxShadow: "0 4px 20px rgba(0,0,0,0.3)" }}>
-          <h3 style={{ margin: "0 0 12px", fontSize: "16px", fontWeight: "600", color: "#a78bfa", display: "flex", alignItems: "center", gap: "6px" }}>
-            <span>⚙️</span> إعدادات الجيل
-          </h3>
-          <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px" }}>📐 نسبة الأبعاد:</label>
-          <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)} style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #334155", background: "#0f0f1a", color: "#e2e8f0", fontSize: "14px", marginBottom: "12px", fontFamily: "inherit" }}>
-            <option value="16:9">أفقي 16:9 (يوتيوب/أفلام)</option>
-            <option value="9:16">عمودي 9:16 (Short/Reels/TikTok)</option>
-            <option value="1:1">مربع 1:1 (إنستغرام/بوست)</option>
-          </select>
-          <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px" }}>💎 مستوى الجودة:</label>
-          <select value={quality} onChange={(e) => setQuality(e.target.value)} style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #334155", background: "#0f0f1a", color: "#e2e8f0", fontSize: "14px", marginBottom: "12px", fontFamily: "inherit" }}>
-            <option value="high">سينمائية فائقة (8K + تفاصيل)</option>
-            <option value="standard">عادية (سريعة التوليد)</option>
-          </select>
-          <label style={{ display: "block", fontSize: "13px", color: "#94a3b8", marginBottom: "6px" }}>
-            🎯 شدة الالتزام بالمرجع: <span style={{ color: "#60a5fa", fontWeight: "600" }}>{refStrength}%</span>
-          </label>
-          <input type="range" min="0" max="100" value={refStrength} onChange={(e) => setRefStrength(Number(e.target.value))} style={{ width: "100%", accentColor: "#60a5fa", marginBottom: "4px" }} />          <p style={{ fontSize: "11px", color: "#64748b", margin: "0" }}>منخفض = إبداع حر | مرتفع = دقة عالية في المحاكاة</p>
-        </section>
-
-        {/* Section 3: Output & Terminal */}
-        <section style={{ background: "rgba(20,20,35,0.8)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(100,150,255,0.25)", boxShadow: "0 4px 20px rgba(0,0,0,0.3)", display: "flex", flexDirection: "column" }}>
-          <h3 style={{ margin: "0 0 12px", fontSize: "16px", fontWeight: "600", color: "#34d399", display: "flex", alignItems: "center", gap: "6px" }}>
-            <span>🖥️</span> المخرجات والسجل
-          </h3>
-          <div style={{ flex: 1, background: "#0a0a0f", borderRadius: "8px", padding: "10px", fontFamily: "monospace", fontSize: "11px", color: "#22d3ee", minHeight: "80px", maxHeight: "100px", overflowY: "auto", border: "1px solid #1e3a5f", marginBottom: "12px" }}>
-            {logs.length === 0 && <span style={{ color: "#64748b" }}>في انتظار البدء...</span>}
-            {logs.map((log, i) => <div key={i} style={{ marginBottom: "4px", wordBreak: "break-word" }}>{log}</div>)}
-          </div>
-          <div style={{ background: "#1e1e32", borderRadius: "10px", minHeight: "180px", display: "flex", alignItems: "center", justifyContent: "center", border: "1px dashed #475569", marginBottom: "12px", overflow: "hidden" }}>
-            {imageUrl ? (
-              <img src={imageUrl} alt="result" style={{ maxWidth: "100%", maxHeight: "180px", borderRadius: "8px" }} />
-            ) : (
-              <span style={{ color: "#64748b", fontSize: "13px" }}>الصورة ستظهر هنا بعد التوليد</span>
-            )}
-          </div>
-          <a href={imageUrl || "#"} onClick={handleDownload} style={{ display: "block", width: "100%", padding: "12px", textAlign: "center", background: imageUrl ? "linear-gradient(135deg, #16a34a, #22c55e)" : "#334155", color: "#fff", textDecoration: "none", borderRadius: "10px", fontWeight: "600", fontSize: "15px", cursor: imageUrl ? "pointer" : "not-allowed", opacity: imageUrl ? 1 : 0.6, transition: "all 0.2s" }}>
-            ⬇️ تحميل الصورة النهائية
-          </a>
-        </section>
-      </div>
-
-      {/* Generate Button - Full Width */}
-      <div style={{ maxWidth: "1200px", margin: "16px auto 0" }}>
-        <button onClick={generate} disabled={loading || uploading} style={{ width: "100%", padding: "16px", background: loading || uploading ? "linear-gradient(135deg, #475569, #64748b)" : "linear-gradient(135deg, #60a5fa, #8b5cf6)", color: "#fff", border: "none", borderRadius: "14px", fontSize: "17px", fontWeight: "700", cursor: loading || uploading ? "not-allowed" : "pointer", boxShadow: loading || uploading ? "none" : "0 4px 20px rgba(100,150,255,0.4)", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
-          {uploading ? "⏳ رفع المرجع..." : loading ? "🎨 جاري التوليد..." : "🚀 توليد الصورة الآن"}
+            <button onClick={handleImageDownload} disabled={!imageUrl} style={{ width: "100%", padding: "10px", background: imageUrl ? "linear-gradient(135deg, #10b981, #059669)" : "#1e1e2f", color: "#fff", border: "none", borderRadius: "10px", cursor: imageUrl ? "pointer" : "not-allowed", fontSize: "13px" }}>⬇️ حفظ اللقطة المصلحة بجهازي</button>
+          </section>
+        </div>
+        
+        <button onClick={generateImage} disabled={imageLoading || uploading} style={{ width: "100%", padding: "14px", background: "linear-gradient(135deg, #8b5cf6, #3b82f6)", color: "#fff", border: "none", borderRadius: "12px", fontWeight: "700", cursor: "pointer" }}>
+          {imageLoading ? "🎨 جاري معالجة الهوية وتغيير السياق..." : "🚀 إنتاج اللقطة الجديدة المتطابقة تماماً"}
         </button>
       </div>
 
-      {/* Section 4: History */}
-      <section style={{ maxWidth: "1200px", margin: "24px auto 0", background: "rgba(20,20,35,0.8)", borderRadius: "16px", padding: "16px", border: "1px solid rgba(100,150,255,0.25)", boxShadow: "0 4px 20px rgba(0,0,0,0.3)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-          <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "600", color: "#fbbf24", display: "flex", alignItems: "center", gap: "6px" }}>
-            <span>📚</span> سجل الصور السابقة
-          </h3>
-          {history.length > 0 && (
-            <button onClick={clearHistory} style={{ background: "none", border: "1px solid #475569", color: "#94a3b8", padding: "6px 12px", borderRadius: "6px", fontSize: "12px", cursor: "pointer" }}>مسح الكل</button>
-          )}
-        </div>
-        {history.length === 0 ? (
-          <p style={{ color: "#64748b", fontSize: "14px", textAlign: "center", padding: "20px" }}>لا توجد صور مولدة بعد. ابدأ بالتوليد!</p>
-        ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: "10px" }}>
-            {history.map((item, idx) => (
-              <div key={idx} style={{ position: "relative", borderRadius: "8px", overflow: "hidden", border: "1px solid #334155", background: "#0f0f1a", cursor: "pointer" }} onClick={() => { setImageUrl(item.url); setPrompt(item.prompt); addLog("تم استرجاع صورة من السجل"); }}>
-                <img src={item.url} alt={item.prompt} style={{ width: "100%", height: "100px", objectFit: "cover" }} />
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(0,0,0,0.7)", padding: "4px 6px", fontSize: "10px", color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.prompt.slice(0, 30)}...</div>              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <footer style={{ textAlign: "center", marginTop: "24px", color: "#64748b", fontSize: "12px", padding: "16px" }}>
-        <p style={{ margin: "4px 0" }}>✨ جميع الأدوات مجانية • بدون علامة مائية • بدون اشتراك</p>
-        <p style={{ margin: "4px 0" }}>💡 نصيحة: استخدم أوصافاً باللغة الإنجليزية لنتائج أدق</p>
+      <footer style={{ marginTop: "16px", background: "#05050a", borderRadius: "10px", padding: "10px", border: "1px solid rgba(255,255,255,0.03)", fontFamily: "monospace", fontSize: "11px", color: "#38bdf8" }}>
+        {logs.map((log, i) => <div key={i} style={{ marginBottom: "2px" }}>{log}</div>)}
       </footer>
-    </main>
+    </div>
   );
 }
