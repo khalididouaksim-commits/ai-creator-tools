@@ -1,170 +1,154 @@
 "use client";
 import { useState } from "react";
-
-// استدعاء المكونات الاحترافية من مسارها الحقيقي داخل مجلد tools
+// استيراد المكونات البرمجية للأدوات المختلفة
 import PromptScript from "./tools/prompt-script/page";
 import ImageGenerator from "./tools/image-generator/page";
-import ImageAnimator from "./tools/image-animator/page";
-import TextToSpeech from "./tools/text-to-speech/page";
+import VideoGenerator from "./tools/video-generator/page"; // أداة الفيديو الجديدة
 
 export default function Home() {
+  // التبويب الافتراضي عند فتح التطبيق هو "الرئيسية"
   const [activeTab, setActiveTab] = useState("home");
   
   return (
     <div style={{
       minHeight: "100vh",
-      backgroundColor: "#050510",
+      background: "#020208",
       color: "#f1f5f9",
-      fontFamily: "system-ui, sans-serif",
+      fontFamily: "sans-serif",
       padding: "12px",
       direction: "rtl"
     }}>
       
-      {/* الهيدر العلوي الذكي */}
+      {/* هيدر المنصة الاحترافي */}
       <header style={{
         textAlign: "center",
-        padding: "16px",
-        background: "linear-gradient(135deg, #1e1e38 0%, #0a0a1a 100%)",
+        background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
+        padding: "20px 10px",
         borderRadius: "16px",
-        border: "1px solid #27274a",
-        marginBottom: "16px"
+        border: "1px solid rgba(99,102,241,0.2)",
+        marginBottom: "16px",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.5)"
       }}>
-        <h1 style={{ fontSize: "18px", color: "#60a5fa", margin: "0 0 6px" }}>🎬 استوديو صناع المحتوى الذكي</h1>
-        <p style={{ fontSize: "11px", color: "#94a3b8", margin: 0 }}>منصة متكاملة لإنتاج القصص، السيناريوهات، الأصوات، والصور المرجعية للهاتف</p>
+        <h1 style={{ margin: "0 0 6px", fontSize: "20px", color: "#38bdf8", fontWeight: "bold" }}>
+          🎬 استوديو صناع المحتوى الذكي
+        </h1>
+        <p style={{ margin: 0, fontSize: "11px", color: "#94a3b8" }}>
+          منصة متكاملة لإنتاج القصص، السيناريوهات، الأصوات، واللقاطات المتحركة من الهاتف
+        </p>
       </header>
 
-      {/* شريط التنقل العلوي المتوافق مع صورك */}
+      {/* شريط التنقل العلوي المتجاوب مع الهاتف (Tabs) */}
       <nav style={{
         display: "flex",
         gap: "6px",
         overflowX: "auto",
+        whiteSpace: "nowrap",
         paddingBottom: "8px",
         marginBottom: "16px",
-        borderBottom: "1px solid #1e1e38"
+        scrollbarWidth: "none"
       }}>
         <button 
-          onClick={() => setActiveTab("home")} 
+          onClick={() => setActiveTab("home")}
           style={{
-            padding: "8px 14px",
+            padding: "10px 14px",
             borderRadius: "10px",
-            border: "none",
             fontSize: "12px",
             fontWeight: "bold",
-            whiteSpace: "nowrap",
-            backgroundColor: activeTab === "home" ? "#3b82f6" : "#111122",
+            border: "none",
+            cursor: "pointer",
+            background: activeTab === "home" ? "#3b82f6" : "#1e1e38",
             color: "#fff",
-            cursor: "pointer"
-          }}
-        >
+            transition: "all 0.2s"
+          }}>
           🏠 الرئيسية
         </button>
 
         <button 
-          onClick={() => setActiveTab("script")} 
+          onClick={() => setActiveTab("script")}
           style={{
-            padding: "8px 14px",
+            padding: "10px 14px",
             borderRadius: "10px",
-            border: "none",
             fontSize: "12px",
             fontWeight: "bold",
-            whiteSpace: "nowrap",
-            backgroundColor: activeTab === "script" ? "#d97706" : "#111122",
+            border: "none",
+            cursor: "pointer",
+            background: activeTab === "script" ? "#8b5cf6" : "#1e1e38",
             color: "#fff",
-            cursor: "pointer"
-          }}
-        >
+            transition: "all 0.2s"
+          }}>
           📜 السيناريو والبرومبت
         </button>
 
         <button 
-          onClick={() => setActiveTab("generator")} 
+          onClick={() => setActiveTab("image")}
           style={{
-            padding: "8px 14px",
+            padding: "10px 14px",
             borderRadius: "10px",
-            border: "none",
             fontSize: "12px",
             fontWeight: "bold",
-            whiteSpace: "nowrap",
-            backgroundColor: activeTab === "generator" ? "#8b5cf6" : "#111122",
+            border: "none",
+            cursor: "pointer",
+            background: activeTab === "image" ? "#ec4899" : "#1e1e38",
             color: "#fff",
-            cursor: "pointer"
-          }}
-        >
-          🎨 توليد الصور المرجعية
+            transition: "all 0.2s"
+          }}>
+          🎨 توليد الصور (Flux)
         </button>
 
+        {/* زر تفعيل أداة تحريك وإنتاج الفيديو */}
         <button 
-          onClick={() => setActiveTab("animator")} 
+          onClick={() => setActiveTab("video")}
           style={{
-            padding: "8px 14px",
+            padding: "10px 14px",
             borderRadius: "10px",
-            border: "none",
             fontSize: "12px",
             fontWeight: "bold",
-            whiteSpace: "nowrap",
-            backgroundColor: activeTab === "animator" ? "#ec4899" : "#111122",
-            color: "#fff",
-            cursor: "pointer"
-          }}
-        >
-          🎥 تحريك المشاهد
-        </button>
-
-        <button 
-          onClick={() => setActiveTab("tts")} 
-          style={{
-            padding: "8px 14px",
-            borderRadius: "10px",
             border: "none",
-            fontSize: "12px",
-            fontWeight: "bold",
-            whiteSpace: "nowrap",
-            backgroundColor: activeTab === "tts" ? "#10b981" : "#111122",
+            cursor: "pointer",
+            background: activeTab === "video" ? "#10b981" : "#1e1e38",
             color: "#fff",
-            cursor: "pointer"
-          }}
-        >
-          🔊 هندسة التعليق الصوتي
+            transition: "all 0.2s",
+            boxShadow: activeTab === "video" ? "0 0 10px rgba(16,185,129,0.5)" : "none"
+          }}>
+          📹 إنتاج الفيديو واللقطات
         </button>
       </nav>
 
-      {/* منطقة عرض محرك الأدوات الديناميكي */}
-      <main style={{ minHeight: "300px" }}>
+      {/* منطقة عرض المحتوى الديناميكية بناءً على التبويب المختار */}
+      <main style={{
+        background: "rgba(15,23,42,0.4)",
+        borderRadius: "16px",
+        padding: "4px",
+        minHeight: "300px"
+      }}>
+        
+        {/* محتوى تبويب الرئيسية الافتراضي */}
         {activeTab === "home" && (
           <div style={{
-            padding: "24px",
+            padding: "20px 10px",
             textAlign: "center",
-            background: "rgba(17,17,34,0.4)",
-            borderRadius: "16px",
-            border: "1px dashed #27274a"
+            background: "#0b0b1e",
+            borderRadius: "12px",
+            border: "1px solid #1e1e38"
           }}>
-            <h3 style={{ fontSize: "15px", color: "#fbbf24", marginBottom: "8px" }}>مرحباً بك في لوحة التحكم الخاصة بك يا صديقي 👋</h3>
-            <p style={{ fontSize: "12px", color: "#94a3b8", lineHeight: "1.6" }}>
-              تم ربط مسارات المجلدات بنجاح. يمكنك الآن الانتقال بين التبويبات العلوية للبدء في صياغة المحتوى، توليد الصور المرجعية المتقدمة، وتحميل ملفاتك مباشرة إلى هاتفك لإنقاذ وإنعاش مشروعك المادي.
+            <div style={{ fontSize: "40px", marginBottom: "10px" }}>🚀</div>
+            <h2 style={{ fontSize: "16px", margin: "0 0 10px", color: "#60a5fa" }}>مرحبًا بك في مستودعك الإنتاجي المطور</h2>
+            <p style={{ fontSize: "12px", color: "#94a3b8", lineHeight: "1.6", maxWidth: "400px", margin: "0 auto" }}>
+              اختر إحدى الأدوات من الشريط العلوي للبدء فورًا في صياغة الاسكريبت الوثائقي، توليد الشخصيات الثابتة، أو إنتاج اللقطات المتحركة بجودة سينمائية.
             </p>
           </div>
         )}
 
+        {/* عرض أداة السكريبت والبرومبت */}
         {activeTab === "script" && <PromptScript />}
-        {activeTab === "generator" && <ImageGenerator />}
-        {activeTab === "animator" && <ImageAnimator />}
-        {activeTab === "tts" && <TextToSpeech />}
-      </main>
 
-      {/* شريط الحالة السفلي التلقائي */}
-      <footer style={{
-        marginTop: "20px",
-        background: "#090915",
-        padding: "10px",
-        borderRadius: "8px",
-        border: "1px solid #1e1e38",
-        fontSize: "11px",
-        fontFamily: "monospace",
-        color: "#38bdf8",
-        textAlign: "center"
-      }}>
-        🟢 [نظام المعالجة الذكي]: متصل ومربوط بمجلد أدوات الإنتاج بنجاح تام ✓
-      </footer>
+        {/* عرض أداة توليد الصور */}
+        {activeTab === "image" && <ImageGenerator />}
+
+        {/* عرض أداة إنتاج الفيديو واللقطات المتحركة */}
+        {activeTab === "video" && <VideoGenerator />}
+
+      </main>
 
     </div>
   );
