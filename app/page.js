@@ -1,12 +1,15 @@
 "use client";
 import { useState } from "react";
-// استيراد المكونات البرمجية للأدوات المختلفة
+
+// استيراد الأدوات والمكونات البرمجية بناءً على هيكلة مشروعك الحقيقية
 import PromptScript from "./tools/prompt-script/page";
 import ImageGenerator from "./tools/image-generator/page";
-import VideoGenerator from "./tools/video-generator/page"; // أداة الفيديو الجديدة
+import VideoGenerator from "./tools/video-generator/page";
+import TextToSpeech from "./tools/text-to-speech/page";
+import ImageAnimator from "./tools/image-animator/page";
 
 export default function Home() {
-  // التبويب الافتراضي عند فتح التطبيق هو "الرئيسية"
+  // التبويب الافتراضي هو "الرئيسية"
   const [activeTab, setActiveTab] = useState("home");
   
   return (
@@ -29,23 +32,23 @@ export default function Home() {
         marginBottom: "16px",
         boxShadow: "0 4px 20px rgba(0,0,0,0.5)"
       }}>
-        <h1 style={{ margin: "0 0 6px", fontSize: "20px", color: "#38bdf8", fontWeight: "bold" }}>
+        <h1 style={{ margin: "0 0 6px", fontSize: "18px", color: "#38bdf8", fontWeight: "bold" }}>
           🎬 استوديو صناع المحتوى الذكي
         </h1>
         <p style={{ margin: 0, fontSize: "11px", color: "#94a3b8" }}>
-          منصة متكاملة لإنتاج القصص، السيناريوهات، الأصوات، واللقاطات المتحركة من الهاتف
+          منصة متكاملة لإنتاج القصص، السيناريوهات، الأصوات، واللقطات المتحركة من الهاتف
         </p>
       </header>
 
-      {/* شريط التنقل العلوي المتجاوب مع الهاتف (Tabs) */}
+      {/* شريط التنقل العلوي المطور المتوافق مع شاشات الهاتف بالكامل */}
       <nav style={{
         display: "flex",
         gap: "6px",
         overflowX: "auto",
         whiteSpace: "nowrap",
-        paddingBottom: "8px",
+        paddingBottom: "10px",
         marginBottom: "16px",
-        scrollbarWidth: "none"
+        WebkitOverflowScrolling: "touch"
       }}>
         <button 
           onClick={() => setActiveTab("home")}
@@ -57,8 +60,7 @@ export default function Home() {
             border: "none",
             cursor: "pointer",
             background: activeTab === "home" ? "#3b82f6" : "#1e1e38",
-            color: "#fff",
-            transition: "all 0.2s"
+            color: "#fff"
           }}>
           🏠 الرئيسية
         </button>
@@ -73,8 +75,7 @@ export default function Home() {
             border: "none",
             cursor: "pointer",
             background: activeTab === "script" ? "#8b5cf6" : "#1e1e38",
-            color: "#fff",
-            transition: "all 0.2s"
+            color: "#fff"
           }}>
           📜 السيناريو والبرومبت
         </button>
@@ -89,13 +90,41 @@ export default function Home() {
             border: "none",
             cursor: "pointer",
             background: activeTab === "image" ? "#ec4899" : "#1e1e38",
-            color: "#fff",
-            transition: "all 0.2s"
+            color: "#fff"
           }}>
           🎨 توليد الصور (Flux)
         </button>
 
-        {/* زر تفعيل أداة تحريك وإنتاج الفيديو */}
+        <button 
+          onClick={() => setActiveTab("speech")}
+          style={{
+            padding: "10px 14px",
+            borderRadius: "10px",
+            fontSize: "12px",
+            fontWeight: "bold",
+            border: "none",
+            cursor: "pointer",
+            background: activeTab === "speech" ? "#06b6d4" : "#1e1e38",
+            color: "#fff"
+          }}>
+          🎤 هندسة الصوت
+        </button>
+
+        <button 
+          onClick={() => setActiveTab("animator")}
+          style={{
+            padding: "10px 14px",
+            borderRadius: "10px",
+            fontSize: "12px",
+            fontWeight: "bold",
+            border: "none",
+            cursor: "pointer",
+            background: activeTab === "animator" ? "#a855f7" : "#1e1e38",
+            color: "#fff"
+          }}>
+          🎥 تحريك الصورة
+        </button>
+
         <button 
           onClick={() => setActiveTab("video")}
           style={{
@@ -107,45 +136,50 @@ export default function Home() {
             cursor: "pointer",
             background: activeTab === "video" ? "#10b981" : "#1e1e38",
             color: "#fff",
-            transition: "all 0.2s",
             boxShadow: activeTab === "video" ? "0 0 10px rgba(16,185,129,0.5)" : "none"
           }}>
           📹 إنتاج الفيديو واللقطات
         </button>
       </nav>
 
-      {/* منطقة عرض المحتوى الديناميكية بناءً على التبويب المختار */}
+      {/* منطقة العرض الديناميكية (بدون نقص) */}
       <main style={{
         background: "rgba(15,23,42,0.4)",
         borderRadius: "16px",
-        padding: "4px",
-        minHeight: "300px"
+        padding: "8px",
+        minHeight: "350px"
       }}>
         
-        {/* محتوى تبويب الرئيسية الافتراضي */}
+        {/* 1. محتوى تبويب الرئيسية الافتراضي */}
         {activeTab === "home" && (
           <div style={{
-            padding: "20px 10px",
+            padding: "30px 15px",
             textAlign: "center",
             background: "#0b0b1e",
             borderRadius: "12px",
             border: "1px solid #1e1e38"
           }}>
-            <div style={{ fontSize: "40px", marginBottom: "10px" }}>🚀</div>
-            <h2 style={{ fontSize: "16px", margin: "0 0 10px", color: "#60a5fa" }}>مرحبًا بك في مستودعك الإنتاجي المطور</h2>
-            <p style={{ fontSize: "12px", color: "#94a3b8", lineHeight: "1.6", maxWidth: "400px", margin: "0 auto" }}>
-              اختر إحدى الأدوات من الشريط العلوي للبدء فورًا في صياغة الاسكريبت الوثائقي، توليد الشخصيات الثابتة، أو إنتاج اللقطات المتحركة بجودة سينمائية.
+            <div style={{ fontSize: "40px", marginBottom: "12px" }}>🚀</div>
+            <h2 style={{ fontSize: "15px", margin: "0 0 10px", color: "#60a5fa" }}>مرحباً بك في مستودعك الإنتاجي المطور</h2>
+            <p style={{ fontSize: "11px", color: "#94a3b8", lineHeight: "1.6", maxWidth: "400px", margin: "0 auto" }}>
+              اختر إحدى الأدوات من الشريط العلوي للبدء فوراً في صياغة الاسكريبت الوثائقي، توليد الشخصيات الثابتة، هندسة الأصوات، أو إنتاج اللقطات المتحركة بجودة سينمائية.
             </p>
           </div>
         )}
 
-        {/* عرض أداة السكريبت والبرومبت */}
+        {/* 2. عرض أداة السكريبت والبرومبت */}
         {activeTab === "script" && <PromptScript />}
 
-        {/* عرض أداة توليد الصور */}
+        {/* 3. عرض أداة توليد الصور */}
         {activeTab === "image" && <ImageGenerator />}
 
-        {/* عرض أداة إنتاج الفيديو واللقطات المتحركة */}
+        {/* 4. عرض أداة تحويل النص إلى صوت (هندسة الصوت) */}
+        {activeTab === "speech" && <TextToSpeech />}
+
+        {/* 5. عرض أداة تحريك الصورة لبث الكاميرا */}
+        {activeTab === "animator" && <ImageAnimator />}
+
+        {/* 6. عرض أداة إنتاج الفيديو الجديدة */}
         {activeTab === "video" && <VideoGenerator />}
 
       </main>
