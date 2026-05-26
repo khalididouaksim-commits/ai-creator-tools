@@ -1,100 +1,175 @@
-/* إعدادات الخط والألوان العامة المستوحاة من واجهتك الداكنة */
+/* إعدادات عالمية بنكهة عصرية */
 * {
     margin: 0;
     padding: 0;
-    box-shadow: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+:root {
+    --bg-dark: #03030e;
+    --card-bg: rgba(11, 11, 30, 0.6);
+    --border-color: rgba(255, 255, 255, 0.06);
+    --accent-purple: #7c3aed;
+    --accent-blue: #38bdf8;
+    --accent-gold: #fbbf24;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
 }
 
 body {
-    background-color: #050514; /* خلفية داكنة جداً لحماية العين */
-    color: #f1f5f9;
-    padding: 20px;
+    background-color: var(--bg-dark);
+    background-image:
+        radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.05) 0px, transparent 50%);
+    color: var(--text-main);
+    padding: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* الهيدر العلوي */
+/* الهيدر السينمائي المشرق */
 .main-header {
-    background: #0b0b1e;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid #1e1e38;
+    background: linear-gradient(135deg, rgba(11, 11, 30, 0.8), rgba(5, 5, 20, 0.8));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 35px 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
     text-align: center;
     margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.main-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-blue), var(--accent-purple), transparent);
 }
 
 .main-header h2 {
-    color: #38bdf8; /* لون أزرق ذكي */
-    font-size: 24px;
-    margin-bottom: 5px;
+    font-size: 28px;
+    font-weight: 800;
+    background: linear-gradient(120deg, #fff, var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
 }
 
 .main-header p {
-    color: #94a3b8;
+    color: var(--text-muted);
     font-size: 14px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 /* حاوية لوحة التحكم */
 .dashboard-container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .section-title {
-    font-size: 16px;
-    color: #fbbf24; /* لون ذهبي ناعم */
-    margin-bottom: 15px;
+    font-size: 14px;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* شبكة الأدوات التفاعلية (Grid) */
+/* شبكة كروت الـ SaaS العالمية */
 .tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
 }
 
-/* كروت الأدوات */
+/* تصميم الكارت الزجاجي الخرافي */
 .tool-card {
-    background: #0b0b1e;
-    border: 1px solid #1e1e38;
-    border-radius: 12px;
-    padding: 20px;
-    text-decoration: none; /* إزالة الخط أسفل الرابط */
-    color: #f1f5f9;
-    transition: all 0.3s ease;
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 25px;
+    text-decoration: none;
+    color: var(--text-main);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* تأثير عند تمرير الماوس أو الضغط من الهاتف */
+.tool-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(800px circle at var(--x, 0px) var(--y, 0px), rgba(255, 255, 255, 0.04), transparent 40%);
+    z-index: 1;
+    pointer-events: none;
+}
+
 .tool-card:hover {
-    transform: translateY(-5px);
-    border-color: #7c3aed; /* يتحول الإطار للون البنفسجي */
-    background: #11112d;
+    transform: translateY(-6px);
+    border-color: rgba(124, 58, 237, 0.3);
+    background: rgba(15, 15, 40, 0.8);
+    box-shadow: 0 15px 35px rgba(124, 58, 237, 0.1);
 }
 
 .tool-icon {
-    font-size: 30px;
-    margin-bottom: 5px;
+    font-size: 36px;
+    margin-bottom: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s;
+}
+
+.tool-card:hover .tool-icon {
+    transform: scale(1.1) rotate(5deg);
 }
 
 .tool-card h4 {
+    font-size: 18px;
+    font-weight: 700;
     color: #fff;
-    font-size: 16px;
+    margin-bottom: 8px;
 }
 
 .tool-card p {
-    color: #64748b;
-    font-size: 12px;
-    line-height: 1.5;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
 }
 
-/* الفوتر السفلي */
+/* الفوتر */
 .main-footer {
     text-align: center;
-    margin-top: 50px;
-    color: #475569;
+    margin-top: auto;
+    padding-top: 40px;
+    padding-bottom: 20px;
+    color: rgba(148, 163, 184, 0.4);
     font-size: 12px;
-    border-top: 1px solid rgba(30, 30, 56, 0.4);
-    padding-top: 15px;
 }
