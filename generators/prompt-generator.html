@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مهندس ومولد الأوامر الذكي | AI Studio</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .container { max-width: 700px; margin: 30px auto; background: #0b0b1e; padding: 25px; border-radius: 12px; border: 1px solid #1e1e38; }
+        .back-link { color: #94a3b8; text-decoration: none; font-size: 14px; display: inline-block; margin-bottom: 15px; }
+        .back-link:hover { color: #38bdf8; }
+        
+        .prompt-box-container {
+            position: relative;
+            margin-top: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            padding-left: 50px; /* ترك مساحة لزر الزائد */
+            background: #11112d;
+            border: 1px solid #1e1e38;
+            color: #fff;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+            outline: none;
+            resize: none;
+        }
+        
+        textarea:focus { border-color: #7c3aed; }
+        
+        /* زر الزائد لدمج الصورة المرجعية داخل التكست بوكس */
+        .add-ref-btn {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            background: #22c55e;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
+        }
+        
+        .add-ref-btn:hover { transform: scale(1.1); background: #16a34a; }
+        
+        .selectors-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            background: #11112d;
+            border: 1px solid #1e1e38;
+            color: #fff;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        button.generate-btn {
+            width: 100%;
+            padding: 14px;
+            background: #7c3aed;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        
+        button.generate-btn:hover { background: #6d28d9; }
+        
+        .output-card {
+            background: #11112d;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px dashed #7c3aed;
+            margin-top: 25px;
+        }
+        
+        .output-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            color: #38bdf8;
+            line-height: 1.5;
+            direction: ltr;
+            text-align: left;
+            display: block;
+            background: #050514;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+        
+        .ref-badge {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid #22c55e;
+            color: #4ade80;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-top: 8px;
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="../index.html" class="back-link">🔙 العودة للوحة التحكم</a>
+        
+        <h2 style="color: #38bdf8; margin-bottom: 5px;">🔮 مهندس الأوامر والمطالبات (Prompt Helper)</h2>
+        <p style="color: #94a3b8; font-size: 13px;">اكتب مشهدك بالعربية، أضف تفاصيلك، وحوله فوراً إلى أمر جاهز ومطور للـ AI.</p>
+
+        <div style="margin-top: 20px;">
+            <label style="color: #fbbf24; font-size: 14px; display: block; margin-bottom: 5px;">اكتب تفاصيل المشهد أو الفكرة:</label>
+            <div class="prompt-box-container">
+                <textarea id="sceneInput" placeholder="مثال: رجل غامض يكتشف كهفاً سرياً في القطب الجنوبي ممتلئاً بالجليد الأزرق المتوهج..."></textarea>
+                <button class="add-ref-btn" onclick="triggerReferenceImage()" title="إدراج صورة مرجعية">+</button>
+            </div>
+            
+            <div class="ref-badge" id="refBadge">
+                🟢 تم دمج خيار الصورة المرجعية بنجاح (Image Prompt Link Included)
+            </div>
+        </div>
+
+        <div class="selectors-grid">
+            <div>
+                <label style="color: #64748b; font-size: 13px; display: block; margin-bottom: 5px;">الأسلوب البصري (Style):</label>
+                <select id="styleSelect">
+                    <option value="cinematic movie scene, 8k resolution, photorealistic">سينمائي واقعي (Cinematic)</option>
+                    <option value="dark moody atmosphere, mystery thriller style, dark ambient lighting">غموض وتشويق داكن (Dark Moody)</option>
+                    <option value="historical documentary archive style, vintage grainy texture, 1950s look">أرشيف وثائقي قديم (Vintage Archive)</option>
+                    <option value="3D animation, highly detailed, unreal engine 5 render">أنيميشن ثلاثي الأبعاد (3D Render)</option>
+                </select>
+            </div>
+            <div>
+                <label style="color: #64748b; font-size: 13px; display: block; margin-bottom: 5px;">حركة الكاميرا (للفيديو/Veo):</label>
+                <select id="cameraSelect">
+                    <option value="slow drone cinematic panning shot, establishing shot">تصوير طائرة درون بطيء</option>
+                    <option value="slow zoom-in camera movement, extreme detail">زوم إن بطيء وتدريجي</option>
+                    <option value="static shot, high shutter speed, cinematic lighting">لقطة ثابتة بتركيز حاد</option>
+                    <option value="dynamic tracking shot, following the subject smoothly">لقطة متحركة تتبع الهدف</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="generate-btn" onclick="buildPrompt()">توليد الأمر الاحترافي المطور 🔥</button>
+
+        <div class="output-card" id="outputContainer" style="display: none;">
+            <span style="color: #fbbf24; font-size: 14px; display: block; margin-bottom: 10px;">📋 الأمر الإنجليزي الجاهز للنسخ:</span>
+            <span class="output-text" id="finalPromptText"></span>
+            <button class="generate-btn" style="margin-top: 0; background: #22c55e;" onclick="copyPrompt()">نسخ الكود النهائي 📋</button>
+        </div>
+    </div>
+
+    <script>
+        let isImageReferenced = false;
+
+        function triggerReferenceImage() {
+            isImageReferenced = !isImageReferenced;
+            const badge = document.getElementById('refBadge');
+            if(isImageReferenced) {
+                badge.style.display = 'flex';
+                alert('📸 تم تفعيل نمط دمج الصورة المرجعية! عند التوليد سيتم تركيب بنية الـ [Image_URL] تلقائياً في مقدمة الأمر.');
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function buildPrompt() {
+            const scene = document.getElementById('sceneInput').value.trim();
+            const style = document.getElementById('styleSelect').value;
+            const camera = document.getElementById('cameraSelect').value;
+            const container = document.getElementById('outputContainer');
+            const outputText = document.getElementById('finalPromptText');
+
+            if(scene === '') {
+                alert('الرجاء كتابة وصف المشهد أولاً يا صديقي! 🎯');
+                return;
+            }
+
+            // محاكاة سريعة وممتازة للترجمة والدمج البرمجي للأمر
+            let baseEnglishText = `A highly detailed scene depicting: ${scene}.`;
+            
+            // تركيب وهندسة الـ Prompt النهائي
+            let finalPrompt = "";
+            if(isImageReferenced) {
+                finalPrompt += "[URL_Image_Reference] + ";
+            }
+            
+            finalPrompt += `${style}, ${camera}, ${baseEnglishText} --ar 16:9 --v 6.0 --style raw`;
+
+            outputText.innerText = finalPrompt;
+            container.style.display = 'block';
+        }
+
+        function copyPrompt() {
+            const text = document.getElementById('finalPromptText').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('تم نسخ الأمر بنجاح! جاهز لجلبه إلى Veo3 أو Midjourney 🚀');
+            });
+        }
+    </script>
+</body>
+</html>
