@@ -3,96 +3,496 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مولد الخطافات الاحترافي | استوديو المحتوى</title>
+    <title>مولد الـ Hooks - Content Tools</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .container { max-width: 650px; margin: 30px auto; background: #0b0b1e; padding: 25px; border-radius: 12px; border: 1px solid #1e1e38; }
-        .back-link { color: #94a3b8; text-decoration: none; font-size: 14px; display: inline-block; margin-bottom: 15px; }
-        .back-link:hover { color: #38bdf8; }
-        .input-group { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
-        input { width: 100%; padding: 14px; background: #11112d; border: 1px solid #1e1e38; color: #fff; border-radius: 8px; box-sizing: border-box; font-size: 15px; outline: none; }
-        input:focus { border-color: #7c3aed; }
-        button { width: 100%; padding: 14px; background: #7c3aed; border: none; color: white; font-weight: bold; font-size: 16px; border-radius: 8px; margin-top: 15px; cursor: pointer; }
-        button:hover { background: #6d28d9; }
-        .results { margin-top: 25px; }
-        .hook-card { background: #11112d; padding: 18px; border-radius: 8px; border-right: 4px solid #fbbf24; margin-bottom: 15px; }
-        .hook-type { font-size: 12px; color: #fbbf24; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
-        .hook-text { font-size: 15px; color: #f1f5f9; line-height: 1.5; margin-bottom: 10px; display: block; }
-        .copy-btn { background: #fbbf24; color: #050514; padding: 5px 12px; font-size: 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; }
+        .generator-page {
+            padding: 3rem 0;
+            min-height: calc(100vh - 300px);
+            background: #f8fafc;
+        }
+        
+        .generator-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .generator-header {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .hook-builder {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            min-height: 600px;
+        }
+        
+        .controls-panel {
+            padding: 2rem;
+            background: white;
+            border-left: 1px solid #e2e8f0;
+            overflow-y: auto;
+            max-height: 800px;
+        }
+        
+        .preview-panel {
+            padding: 2rem;
+            background: #f1f5f9;
+            display: flex;
+            flex-direction: column;        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #f59e0b;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+        }
+        
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .style-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .chip {
+            padding: 0.4rem 1rem;            background: #fffbeb;
+            color: #92400e;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 1px solid #fcd34d;
+            transition: all 0.2s;
+        }
+        
+        .chip:hover, .chip.active {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+            transform: translateY(-1px);
+        }
+        
+        .hooks-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-left: 5px;
+        }
+        
+        .hook-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-right: 4px solid #f59e0b;
+            transition: all 0.3s;
+            animation: slideIn 0.4s ease forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        
+        .hook-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        
+        .hook-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .platform-badge {            background: #e0f2fe;
+            color: #0369a1;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .hook-type {
+            background: #fef3c7;
+            color: #b45309;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .hook-text {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #0f172a;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        .copy-btn {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #94a3b8;
+        }        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .generate-btn:hover {
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 968px) {
+            .hook-builder {
+                grid-template-columns: 1fr;
+            }
+            .controls-panel {
+                border-left: none;
+                border-bottom: 1px solid #e2e8f0;
+                max-height: none;
+            }
+            .hooks-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <a href="../index.html" class="back-link">🔙 العودة للوحة التحكم الرئيسي</a>
-        
-        <h2 style="color: #fbbf24; margin-bottom: 5px;">🪝 مولد خطافات الفيديوهات الفيروسية</h2>
-        <p style="color: #94a3b8; font-size: 13px;">اصنع مقدمات خاطفة للأنظار تضمن بقاء المشاهد لأطول مدة ممكنة.</p>
-
-        <div class="input-group">
-            <label style="color: #38bdf8; font-size: 14px;">ما هو السر أو الموضوع الغامض في الفيديو؟</label>
-            <input type="text" id="hookInput" placeholder="مثال: سر ممر دياتلوف، الجليد المخفي، حقيقة ريتشارد بيرد...">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-bolt" style="color: #f59e0b;"></i>
+                <span>Content Tools</span>
+            </div>
+            <ul class="nav-links">                <li><a href="../index.html">الرئيسية</a></li>
+                <li><a href="../index.html#generators">الأدوات</a></li>
+            </ul>
         </div>
-        
-        <button onclick="generateHooks()">توليد مقدمات فيروسية 🔥</button>
+    </nav>
 
-        <div class="results" id="hooksContainer"></div>
-    </div>
+    <!-- Hook Generator Page -->
+    <section class="generator-page">
+        <div class="container">
+            <div class="generator-container">
+                <div class="generator-header">
+                    <h1><i class="fas fa-anchor"></i> مولد الـ Hooks</h1>
+                    <p>اصنع بدايات قوية تخطف الانتباه من الثانية الأولى</p>
+                </div>
+                
+                <div class="hook-builder">
+                    <!-- Controls Panel -->
+                    <div class="controls-panel">
+                        <h3 style="margin-bottom: 1.5rem; color: #1e293b;">
+                            <i class="fas fa-sliders-h" style="color: #f59e0b;"></i> 
+                            إعدادات الـ Hook
+                        </h3>
+
+                        <div class="form-group">
+                            <label>المنصة المستهدفة</label>
+                            <select id="platform">
+                                <option value="tiktok">TikTok / Reels / Shorts</option>
+                                <option value="youtube">YouTube (فيديوهات طويلة)</option>
+                                <option value="linkedin">LinkedIn / Twitter (نصي)</option>
+                                <option value="general">عام / متعدد المنصات</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>نوع الـ Hook</label>
+                            <div class="style-chips" id="styleChips">
+                                <div class="chip active" data-style="question">❓ سؤال</div>
+                                <div class="chip" data-style="shocking">⚡ صادم / إحصائية</div>
+                                <div class="chip" data-style="story">📖 قصة شخصية</div>
+                                <div class="chip" data-style="challenge"> تحدي</div>
+                                <div class="chip" data-style="direct">️ مباشر / نداء</div>
+                                <div class="chip" data-style="stop">🛑 وقف التمرير</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>الموضوع الرئيسي (Topic)</label>
+                            <input type="text" id="topic" placeholder="مثال: تعلم البرمجة، خسارة الوزن، التسويق..." value="بناء مشروع ناجح">
+                        </div>
+                        <div class="form-group">
+                            <label>الجمهور المستهدف</label>
+                            <input type="text" id="audience" placeholder="مثال: المبتدئين، أصحاب المشاريع، الطلاب..." value="رواد الأعمال الشباب">
+                        </div>
+
+                        <div class="form-group">
+                            <label>النبرة (Tone)</label>
+                            <select id="tone">
+                                <option value="urgent">عاجل / محفز</option>
+                                <option value="curious">فضولي / غامض</option>
+                                <option value="friendly">ودي / قريب</option>
+                                <option value="professional">احترافي / جدي</option>
+                                <option value="humorous">كوميدي / خفيف</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>كلمات مفتاحية إضافية (اختياري)</label>
+                            <textarea id="keywords" placeholder="أضف كلمات أو عبارات تريد التركيز عليها..."></textarea>
+                        </div>
+
+                        <button onclick="generateHooks()" class="btn btn-primary generate-btn">
+                            <i class="fas fa-magic"></i>
+                            توليد الـ Hooks
+                        </button>
+                    </div>
+                    
+                    <!-- Preview Panel -->
+                    <div class="preview-panel">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                            <h3 style="color:#1e293b; margin:0;"><i class="fas fa-list-ul"></i> النتائج المقترحة</h3>
+                            <span style="color:#64748b; font-size:0.9rem;" id="resultCount">0 Hooks</span>
+                        </div>
+                        
+                        <div id="hooksContainer" class="hooks-grid">
+                            <div class="empty-state">
+                                <i class="fas fa-anchor"></i>
+                                <p>املأ البيانات واضغط على "توليد" للحصول على Hooks احترافية</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">                <p>&copy; 2026 Content Tools. جميع الحقوق محفوظة</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
+        let selectedStyle = 'question';
+        
+        // Chip Selection Logic
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                selectedStyle = this.dataset.style;
+            });
+        });
+
+        // Hook Templates Database
+        const hookTemplates = {
+            question: [
+                "هل تعاني من {topic}؟ إذا كنت {audience}، فهذا الفيديو سينقذك!",
+                "لماذا يفشل 90% من {audience} في {topic}؟ الإجابة قد تذهلك!",
+                "هل جربت {topic} من قبل وفشلت؟ المشكلة ليست فيك، بل في الطريقة!",
+                "ماذا لو أخبرتك أن {topic} أسهل مما تتخيل بـ 10 مرات؟"
+            ],
+            shocking: [
+                "⚠️ تحذير: معظم {audience} يرتكبون هذا الخطأ القاتل في {topic}!",
+                "حقيقة صادمة: {topic} ليس كما تعلمه المدارس أو الكورسات التقليدية!",
+                "أوقف كل شيء! هذه المعلومة عن {topic} ستغير مسار حياتك المهنية.",
+                "الإحصائيات لا تكذب: 8 من 10 {audience} يخسرون فرصهم بسبب تجاهل {topic}!"
+            ],
+            story: [
+                "قبل سنة، كنت {audience} أضيع وقتي وجهدي في {topic}... حتى اكتشفت هذا السر!",
+                "قصة قصيرة غيرت نظرتي لـ {topic} تماماً، وأتمنى لو سمعتها قبل 5 سنوات!",
+                "بدأت من الصفر كـ {audience}، وبعد 3 أشهر من تطبيق هذا في {topic}، تغير كل شيء!",
+                "هذا الدرس تعلمته بالمحن والخسارة في {topic}، ولن أريدها لأي {audience} آخر!"
+            ],
+            challenge: [
+                "أتحداك ألا تتوقف عن المشاهدة خلال 10 ثوانٍ إذا كنت مهتماً بـ {topic}!",
+                "جرب هذه الطريقة في {topic} لمدة 7 أيام فقط، وشاهد النتائج بنفسك!",
+                "إذا كنت {audience} جاداً في {topic}، فلا تتردد في تطبيق هذا التحدي اليوم!",
+                "رهان صغير: بعد سماع هذا الـ Hook، لن تنظر لـ {topic} بنفس الطريقة!"
+            ],
+            direct: [
+                "يا {audience}، اسمعني جيداً! إذا كنت تريد إتقان {topic}، فركز معي الآن.",
+                "توقف عن البحث عن حلول معقدة! {topic} يحتاج فقط لهذه الخطوات الثلاث.",
+                "هذا الفيديو مخصص لـ {audience} الذين جادون في {topic} ولا يريدون تضيع وقتهم.",
+                "إذا كانت {topic} تمثل لك عقبة، فهذا الدرس القصير سيفتح لك أبواباً جديدة!"
+            ],
+            stop: [                "🛑 توقف عن التمرير! هذا هو الدرس الأهم الذي ستتعلمه اليوم عن {topic}.",
+                "لا تكمل التمرير إذا كنت {audience} وتبحث عن نتائج حقيقية في {topic}!",
+                "انتبه! ما سأقوله في الثواني القادمة عن {topic} قد يوفر عليك أشهر من التجارب!",
+                "👀 عينك على الشاشة! هذا الـ Hook صُمم خصيصاً لـ {audience} المهتمين بـ {topic}."
+            ]
+        };
+
+        // Tone Modifiers
+        const toneModifiers = {
+            urgent: [" الآن!", " قبل فوات الأوان!", " فوراً!"],
+            curious: [" الغريب في الأمر...", " المفاجأة تكمن في...", " السر وراء هذا هو..."],
+            friendly: [" يا صديقي،", " بيني وبينك،", " بصراحة،"],
+            professional: [" وفقاً للدراسات،", " من الناحية العملية،", " بناءً على الخبرة الميدانية،"],
+            humorous: [" (نعم، هذا حقيقي!) 😅", " لا تلمني إذا دمغت الشاشة! 🤣", " تحذير: قد يسبب إدمان النجاح! "]
+        };
+
         function generateHooks() {
-            const keyword = document.getElementById('hookInput').value.trim();
+            const platform = document.getElementById('platform').value;
+            const topic = document.getElementById('topic').value || "الموضوع";
+            const audience = document.getElementById('audience').value || "الجمهور";
+            const tone = document.getElementById('tone').value;
+            const keywords = document.getElementById('keywords').value;
+            
             const container = document.getElementById('hooksContainer');
             container.innerHTML = '';
-
-            if (keyword === '') {
-                alert('الرجاء كتابة الفكرة أولاً يا صديقي! 🎯');
-                return;
-            }
-
-            // أنواع الخطافات السيكولوجية للمحتوى الغامض والقصصي
-            const hooks = [
-                {
-                    type: "أسلوب الصدمة المفاجئة 🚨",
-                    text: "كل ما أخبروك به عن [keyword] هو كذبة تم التخطيط لها بدقة.. الحقيقة المرعبة بدأت عندما..."
-                },
-                {
-                    type: "أسلوب السؤال الغامض ❓",
-                    text: "هل تساءلت يوماً لماذا تم إغلاق ملف [keyword] بشكل مفاجئ ومنع أي شخص من الاقتراب منه؟ السر يكمن في هذه الوثيقة.."
-                },
-                {
-                    type: "أسلوب سرد القصة المشوقة 📖",
-                    text: "في تمام الساعة الثالثة صباحاً، كان كل شيء يسير بشكل طبيعي، حتى ظهر [keyword] وتسبب في حدث غيّر التاريخ كلياً.."
-                }
-            ];
-
-            hooks.forEach(item => {
-                const finalHook = item.text.replace(/\[keyword\]/g, keyword);
+            
+            // Get 4 random templates from selected style
+            const templates = [...hookTemplates[selectedStyle]].sort(() => 0.5 - Math.random()).slice(0, 4);
+            
+            templates.forEach((template, index) => {
+                // Replace placeholders
+                let hookText = template.replace(/{topic}/g, topic).replace(/{audience}/g, audience);
                 
+                // Add tone modifier randomly
+                if (Math.random() > 0.5 && toneModifiers[tone]) {
+                    const modifiers = toneModifiers[tone];
+                    const randomMod = modifiers[Math.floor(Math.random() * modifiers.length)];
+                    hookText += randomMod;
+                }
+                
+                // Add keywords if provided
+                if (keywords && Math.random() > 0.6) {
+                    hookText += ` (${keywords})`;
+                }
+                
+                // Platform badge logic
+                const platformNames = {
+                    'tiktok': 'TikTok / Reels',
+                    'youtube': 'YouTube',
+                    'linkedin': 'LinkedIn / X',                    'general': 'عام'
+                };
+                
+                const styleNames = {
+                    'question': 'سؤال',
+                    'shocking': 'صادم',
+                    'story': 'قصة',
+                    'challenge': 'تحدي',
+                    'direct': 'مباشر',
+                    'stop': 'وقف تمرير'
+                };
+                
+                // Create card HTML
                 const card = document.createElement('div');
                 card.className = 'hook-card';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
                 card.innerHTML = `
-                    <div class="hook-type">${item.type}</div>
-                    <span class="hook-text">${finalHook}</span>
-                    <button class="copy-btn" onclick="copyHook(this, '${finalHook}')">نسخ الخطاف 📋</button>
+                    <div class="hook-header">
+                        <span class="platform-badge">${platformNames[platform]}</span>
+                        <span class="hook-type">${styleNames[selectedStyle]}</span>
+                    </div>
+                    <div class="hook-text">${hookText}</div>
+                    <button class="copy-btn" onclick="copyHook(this, '${hookText.replace(/'/g, "\\'")}')">
+                        <i class="fas fa-copy"></i> نسخ الـ Hook
+                    </button>
                 `;
+                
                 container.appendChild(card);
             });
+            
+            document.getElementById('resultCount').textContent = `${templates.length} Hooks`;
         }
-
-        function copyHook(button, text) {
+        
+        function copyHook(btn, text) {
             navigator.clipboard.writeText(text).then(() => {
-                const originalText = button.innerText;
-                button.innerText = 'تم النسخ! ✓';
-                button.style.background = '#10b981';
-                button.style.color = '#fff';
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+                btn.style.background = '#10b981';
+                btn.style.color = 'white';
+                btn.style.borderColor = '#10b981';
+                
                 setTimeout(() => {
-                    button.innerText = originalText;
-                    button.style.background = '#fbbf24';
-                    button.style.color = '#050514';
-                }, 1500);
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '#f8fafc';
+                    btn.style.color = '#64748b';
+                    btn.style.borderColor = '#e2e8f0';
+                }, 2000);
             });
-        }
+        }        
+        // Generate on load for demo
+        window.addEventListener('DOMContentLoaded', () => {
+            generateHooks();
+        });
     </script>
 </body>
 </html>
