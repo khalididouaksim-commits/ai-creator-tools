@@ -1,699 +1,435 @@
+<!-- generators/script-generator.html -->
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مولد السيناريوهات - Content Tools</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .generator-page {
-            padding: 3rem 0;
-            min-height: calc(100vh - 300px);
-        }
-        
-        .generator-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .generator-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .generator-header h1 {
-            color: var(--dark-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .script-builder {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 2rem;
-        }
-        
-        .controls-panel {
-            background: var(--light-color);
-            padding: 1.5rem;
-            border-radius: 12px;
-            height: fit-content;
-        }
-        
-        .preview-panel {
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;            padding: 2rem;
-            min-height: 600px;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-        
-        .form-group input[type="text"],
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input[type="text"]:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-        
-        .form-group textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .template-option {
-            border: 3px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .template-option:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-        
-        .template-option.active {
-            border-color: var(--primary-color);
-            background: rgba(99, 102, 241, 0.1);
-        }
-        
-        .template-option i {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-        
-        .template-option span {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        
-        .script-output {
-            background: var(--light-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-top: 1rem;
-            line-height: 2;
-            white-space: pre-wrap;
-            font-size: 1rem;
-            border-right: 4px solid var(--primary-color);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .action-buttons .btn {
-            flex: 1;
-            justify-content: center;
-        }
-        
-        .script-section {            margin-bottom: 2rem;
-            padding: 1rem;
-            background: white;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-        
-        .script-section h3 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-        
-        .script-section p {
-            color: var(--text-color);
-            line-height: 1.8;
-        }
-        
-        .duration-badge {
-            display: inline-block;
-            background: var(--gradient);
-            color: white;
-            padding: 0.25rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-        }
-        
-        .generate-btn {
-            width: 100%;
-            padding: 1rem;
-            font-size: 1.1rem;
-            margin-top: 1rem;
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-        }
-        
-        .loading.show {
-            display: block;
-        }
-        
-        .spinner {
-            border: 4px solid var(--border-color);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 50px;            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 968px) {
-            .script-builder {
-                grid-template-columns: 1fr;
-            }
-            
-            .template-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Script Generator</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<style>
+
+body{
+  background:#050816;
+  color:white;
+  font-family:Arial;
+  padding:20px;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.controls{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+select,button{
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#111827;
+  color:white;
+  font-size:16px;
+}
+
+button{
+  cursor:pointer;
+  background:linear-gradient(90deg,#7c3aed,#06b6d4);
+  font-weight:bold;
+}
+
+.scripts-grid{
+  display:grid;
+  gap:20px;
+  margin-top:35px;
+}
+
+.script-card{
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:18px;
+  padding:20px;
+}
+
+.script-title{
+  font-size:20px;
+  margin-bottom:20px;
+  color:#06b6d4;
+}
+
+.scene{
+  margin-bottom:15px;
+  background:#0f172a;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #1e293b;
+}
+
+.scene strong{
+  display:block;
+  margin-bottom:8px;
+  color:#8b5cf6;
+}
+
+.card-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.small-btn{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:#1f2937;
+  color:white;
+}
+
+.section{
+  margin-top:50px;
+}
+
+.section-title{
+  margin-bottom:20px;
+  font-size:24px;
+}
+
+.mini-card{
+  background:#0f172a;
+  border:1px solid #1e293b;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+
+</style>
+
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">
-                <i class="fas fa-bolt"></i>
-                <span>Content Tools</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="../index.html">الرئيسية</a></li>
-                <li><a href="../index.html#generators">الأدوات</a></li>
-            </ul>
+
+<div class="container">
+
+<h1>🎬 AI Script Generator</h1>
+
+<div class="controls">
+
+<select id="platform">
+  <option>YouTube Shorts</option>
+  <option>TikTok</option>
+  <option>Documentary</option>
+  <option>Long YouTube Video</option>
+</select>
+
+<select id="genre">
+  <option>Mystery</option>
+  <option>Science</option>
+  <option>History</option>
+  <option>Horror</option>
+  <option>Finance</option>
+  <option>Motivation</option>
+</select>
+
+<select id="tone">
+  <option>Suspense</option>
+  <option>Emotional</option>
+  <option>Dark</option>
+  <option>Funny</option>
+  <option>Serious</option>
+</select>
+
+<select id="duration">
+  <option>30 Seconds</option>
+  <option>1 Minute</option>
+  <option>3 Minutes</option>
+  <option>10 Minutes</option>
+</select>
+
+<button onclick="generateScripts()">
+Generate 3 Scripts
+</button>
+
+</div>
+
+<div class="scripts-grid" id="scriptsGrid"></div>
+
+<div class="section">
+
+<h2 class="section-title">⭐ Saved Scripts</h2>
+
+<div id="savedScripts"></div>
+
+</div>
+
+<div class="section">
+
+<h2 class="section-title">🕘 Script History</h2>
+
+<div id="history"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const hooks = [
+  "Nobody expected what investigators found...",
+  "Scientists still cannot explain this event...",
+  "This hidden discovery shocked the world...",
+  "One mistake changed history forever...",
+  "The camera captured something terrifying..."
+];
+
+const intros = [
+  "It all started on a cold mysterious night.",
+  "Everything seemed normal at first.",
+  "For years, nobody talked about this story.",
+  "At first, people thought it was impossible."
+];
+
+const buildups = [
+  "As the investigation continued, strange details appeared.",
+  "Witnesses began reporting terrifying experiences.",
+  "The deeper they explored, the darker the truth became.",
+  "Nobody was prepared for what happened next."
+];
+
+const twists = [
+  "But the truth was completely different.",
+  "Then investigators discovered a hidden document.",
+  "What happened next terrified everyone involved.",
+  "The final recording changed everything."
+];
+
+const endings = [
+  "Until today, nobody knows the full truth.",
+  "Some people believe the mystery still continues.",
+  "The case remains unsolved after all these years.",
+  "And this is why the story became legendary."
+];
+
+function randomItem(arr){
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateScripts(){
+
+  const platform =
+  document.getElementById("platform").value;
+
+  const genre =
+  document.getElementById("genre").value;
+
+  const tone =
+  document.getElementById("tone").value;
+
+  const duration =
+  document.getElementById("duration").value;
+
+  const grid =
+  document.getElementById("scriptsGrid");
+
+  grid.innerHTML = "";
+
+  let generatedScripts = [];
+
+  for(let i=0;i<3;i++){
+
+    const hook = randomItem(hooks);
+    const intro = randomItem(intros);
+    const buildup = randomItem(buildups);
+    const twist = randomItem(twists);
+    const ending = randomItem(endings);
+
+    const fullScript = `
+HOOK:
+${hook}
+
+INTRO:
+${intro}
+
+BUILD-UP:
+${buildup}
+
+TWIST:
+${twist}
+
+ENDING:
+${ending}
+`;
+
+    generatedScripts.push(fullScript);
+
+    grid.innerHTML += `
+
+    <div class="script-card">
+
+      <div class="script-title">
+        ${genre} • ${tone} • ${duration}
+      </div>
+
+      <div class="scene">
+        <strong>🎣 Hook</strong>
+        ${hook}
+      </div>
+
+      <div class="scene">
+        <strong>📖 Intro</strong>
+        ${intro}
+      </div>
+
+      <div class="scene">
+        <strong>📈 Build-up</strong>
+        ${buildup}
+      </div>
+
+      <div class="scene">
+        <strong>⚠️ Twist</strong>
+        ${twist}
+      </div>
+
+      <div class="scene">
+        <strong>🎬 Ending</strong>
+        ${ending}
+      </div>
+
+      <div class="scene">
+        <strong>🎤 Voice Style</strong>
+        Deep cinematic narration voice
+      </div>
+
+      <div class="card-buttons">
+
+        <button class="small-btn"
+        onclick='copyScript(${JSON.stringify(fullScript)})'>
+        Copy
+        </button>
+
+        <button class="small-btn"
+        onclick='saveScript(${JSON.stringify(fullScript)})'>
+        Save
+        </button>
+
+      </div>
+
+    </div>
+
+    `;
+  }
+
+  saveHistory(generatedScripts);
+}
+
+function copyScript(text){
+
+  navigator.clipboard.writeText(text);
+
+  alert("Script copied!");
+}
+
+function saveScript(script){
+
+  let saved =
+  JSON.parse(localStorage.getItem("savedScripts")) || [];
+
+  saved.push(script);
+
+  localStorage.setItem(
+    "savedScripts",
+    JSON.stringify(saved)
+  );
+
+  loadSavedScripts();
+}
+
+function loadSavedScripts(){
+
+  let saved =
+  JSON.parse(localStorage.getItem("savedScripts")) || [];
+
+  const container =
+  document.getElementById("savedScripts");
+
+  container.innerHTML = "";
+
+  saved.forEach(script => {
+
+    container.innerHTML += `
+      <div class="mini-card">
+        <pre style="white-space:pre-wrap;color:white">${script}</pre>
+      </div>
+    `;
+  });
+}
+
+function saveHistory(scripts){
+
+  let history =
+  JSON.parse(localStorage.getItem("scriptHistory")) || [];
+
+  history.unshift({
+    date:new Date().toLocaleString(),
+    scripts:scripts
+  });
+
+  localStorage.setItem(
+    "scriptHistory",
+    JSON.stringify(history)
+  );
+
+  loadHistory();
+}
+
+function loadHistory(){
+
+  let history =
+  JSON.parse(localStorage.getItem("scriptHistory")) || [];
+
+  const container =
+  document.getElementById("history");
+
+  container.innerHTML = "";
+
+  history.slice(0,10).forEach(item => {
+
+    let html = item.scripts.map(script => `
+      <pre style="white-space:pre-wrap;color:white">
+${script}
+      </pre>
+    `).join("");
+
+    container.innerHTML += `
+      <div class="mini-card">
+
+        <strong>${item.date}</strong>
+
+        <div style="margin-top:10px">
+          ${html}
         </div>
-    </nav>
 
-    <!-- Script Generator Page -->
-    <section class="generator-page">
-        <div class="container">
-            <div class="generator-container">
-                <div class="generator-header">
-                    <h1><i class="fas fa-file-lines"></i> مولد السيناريوهات</h1>
-                    <p>أنشئ سيناريوهات احترافية لمقاطعك بسهولة</p>
-                </div>
-                
-                <div class="script-builder">
-                    <!-- Controls Panel -->
-                    <div class="controls-panel">
-                        <h3 style="margin-bottom: 1.5rem; color: var(--dark-color);">
-                            <i class="fas fa-sliders-h"></i> إعدادات السيناريو                        </h3>
-                        
-                        <!-- Script Type -->
-                        <div class="form-group">
-                            <label>نوع المحتوى</label>
-                            <div class="template-grid">
-                                <div class="template-option active" data-type="youtube">
-                                    <i class="fab fa-youtube"></i>
-                                    <span>YouTube</span>
-                                </div>
-                                <div class="template-option" data-type="tiktok">
-                                    <i class="fab fa-tiktok"></i>
-                                    <span>TikTok</span>
-                                </div>
-                                <div class="template-option" data-type="instagram">
-                                    <i class="fab fa-instagram"></i>
-                                    <span>Reels</span>
-                                </div>
-                                <div class="template-option" data-type="educational">
-                                    <i class="fas fa-graduation-cap"></i>
-                                    <span>تعليمي</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Topic -->
-                        <div class="form-group">
-                            <label>الموضوع الرئيسي</label>
-                            <input type="text" id="topic" placeholder="مثال: كيفية البدء في التداول" value="كيفية إنشاء محتوى ناجح">
-                        </div>
-                        
-                        <!-- Audience -->
-                        <div class="form-group">
-                            <label>الجمهور المستهدف</label>
-                            <select id="audience">
-                                <option value="beginners">المبتدئين</option>
-                                <option value="intermediate">متوسطي المستوى</option>
-                                <option value="advanced">المحترفين</option>
-                                <option value="general">عامة الناس</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Tone -->
-                        <div class="form-group">
-                            <label>أسلوب التقديم</label>
-                            <select id="tone">
-                                <option value="energetic">حماسي</option>
-                                <option value="professional">احترافي</option>
-                                <option value="friendly">ودي</option>
-                                <option value="humorous">كوميدي</option>                                <option value="serious">جدي</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Duration -->
-                        <div class="form-group">
-                            <label>مدة الفيديو</label>
-                            <select id="duration">
-                                <option value="30">30 ثانية</option>
-                                <option value="60">دقيقة واحدة</option>
-                                <option value="180">3 دقائق</option>
-                                <option value="300" selected>5 دقائق</option>
-                                <option value="600">10 دقائق</option>
-                                <option value="900">15 دقيقة</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Key Points -->
-                        <div class="form-group">
-                            <label>النقاط الرئيسية (اختياري)</label>
-                            <textarea id="keyPoints" placeholder="اكتب النقاط التي تريد تغطيتها..."></textarea>
-                        </div>
-                        
-                        <button onclick="generateScript()" class="btn btn-primary generate-btn">
-                            <i class="fas fa-magic"></i>
-                            إنشاء السيناريو
-                        </button>
-                    </div>
-                    
-                    <!-- Preview Panel -->
-                    <div class="preview-panel">
-                        <div id="loading" class="loading">
-                            <div class="spinner"></div>
-                            <p>جاري إنشاء السيناريو...</p>
-                        </div>
-                        
-                        <div id="scriptOutput" style="display: none;">
-                            <div class="duration-badge">
-                                <i class="fas fa-clock"></i>
-                                <span id="durationText">5 دقائق</span>
-                            </div>
-                            
-                            <div id="scriptContent" class="script-output"></div>
-                            
-                            <div class="action-buttons">
-                                <button onclick="copyScript()" class="btn btn-outline">
-                                    <i class="fas fa-copy"></i>
-                                    نسخ السيناريو
-                                </button>
-                                <button onclick="downloadScript()" class="btn btn-primary">                                    <i class="fas fa-download"></i>
-                                    تحميل TXT
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div id="emptyState" style="text-align: center; padding: 3rem; color: #94a3b8;">
-                            <i class="fas fa-file-lines" style="font-size: 4rem; margin-bottom: 1rem;"></i>
-                            <p>املأ المعلومات واضغط على "إنشاء السيناريو"</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+      </div>
+    `;
+  });
+}
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 Content Tools. جميع الحقوق محفوظة</p>
-            </div>
-        </div>
-    </footer>
+loadSavedScripts();
+loadHistory();
 
-    <script>
-        let currentScript = '';
-        let scriptType = 'youtube';
-        
-        // Script type selection
-        document.querySelectorAll('.template-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.template-option').forEach(o => o.classList.remove('active'));
-                this.classList.add('active');
-                scriptType = this.dataset.type;
-            });
-        });
-        
-        function generateScript() {
-            const topic = document.getElementById('topic').value;
-            const audience = document.getElementById('audience').value;
-            const tone = document.getElementById('tone').value;
-            const duration = parseInt(document.getElementById('duration').value);
-            const keyPoints = document.getElementById('keyPoints').value;
-            
-            if (!topic) {
-                alert('الرجاء إدخال الموضوع الرئيسي');
-                return;
-            }
-                        // Show loading
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('emptyState').style.display = 'none';
-            document.getElementById('scriptOutput').style.display = 'none';
-            
-            // Simulate processing
-            setTimeout(() => {
-                const script = createScript(topic, audience, tone, duration, keyPoints);
-                currentScript = script;
-                
-                document.getElementById('scriptContent').textContent = script;
-                document.getElementById('durationText').textContent = formatDuration(duration);
-                
-                document.getElementById('loading').classList.remove('show');
-                document.getElementById('scriptOutput').style.display = 'block';
-            }, 1500);
-        }
-        
-        function createScript(topic, audience, tone, duration, keyPoints) {
-            const audienceText = {
-                'beginners': 'المبتدئين',
-                'intermediate': 'متوسطي المستوى',
-                'advanced': 'المحترفين',
-                'general': 'عامة المشاهدين'
-            };
-            
-            const toneText = {
-                'energetic': 'حماسي',
-                'professional': 'احترافي',
-                'friendly': 'ودي',
-                'humorous': 'كوميدي',
-                'serious': 'جدي'
-            };
-            
-            const typeTemplates = {
-                'youtube': createYouTubeScript,
-                'tiktok': createTikTokScript,
-                'instagram': createInstagramScript,
-                'educational': createEducationalScript
-            };
-            
-            return typeTemplates[scriptType](topic, audienceText[audience], toneText[tone], duration, keyPoints);
-        }
-        
-        function createYouTubeScript(topic, audience, tone, duration, keyPoints) {
-            return ` عنوان الفيديو: ${topic}
+</script>
 
-🎯 الجمهور المستهدف: ${audience}
-🎭 الأسلوب: ${tone}
-⏱️ المدة المتوقعة: ${formatDuration(duration)}
-═══════════════════════════════════════════════
-
-🎬 المقدمة (0:00 - 0:30)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-[Hook قوي]
-"هل تعلم أن ${generateHook(topic)}؟"
-
-[تقديم الموضوع]
-"في الفيديو اليوم، راح نتحدث عن ${topic}، وكيف تقدر تستفيد منه بشكل عملي."
-
-[ما سيتعلمه المشاهد]
-"بنهاية الفيديو، راح تعرف:
-• النقطة الأولى المهمة
-• كيف تطبق اللي تعلمته
-• أسرار ما تعرفهاش عن الموضوع"
-
-[دعوة للمشاهدة]
-"خلينا نبدأ!"
-
-═══════════════════════════════════════════════
-
-📚 المحتوى الرئيسي (0:30 - ${formatTime(duration - 60)})
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-النقطة الأولى: الأساسيات
-───────────────────────
-${generatePoint(topic, 1)}
-
-النقطة الثانية: التطبيق العملي
-────────────────────────────
-${generatePoint(topic, 2)}
-
-النقطة الثالثة: الأخطاء الشائعة
-─────────────────────────────
-${generatePoint(topic, 3)}
-
-${keyPoints ? `\nالنقاط الإضافية:\n─────────────────────\n${keyPoints}` : ''}
-
-═══════════════════════════════════════════════
-
-🎯 الخاتمة (${formatTime(duration - 30)} - ${formatTime(duration)})
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-[ملخص سريع]
-"باختصار، تعلمنا اليوم:
-• النقطة الأولى
-• النقطة الثانية
-• النقطة الثالثة"
-[دعوة للعمل - CTA]
-"إذا عجبك الفيديو، ما تنساش:
-👍 اللايك
-🔔 الاشتراك وتفعيل الجرس
-💬 التعليق برأيك"
-
-[سؤال للتفاعل]
-"وقول لي في التعليقات: ${generateQuestion(topic)}"
-
-[وداع]
-"شكراً للمشاهدة، وأشوفكم في الفيديو الجاي! سلام 👋"
-
-═══════════════════════════════════════════════
-
-📝 ملاحظات إضافية:
-• استخدم لقطات B-Roll مناسبة
-• أضف نصوص على الشاشة للنقاط المهمة
-• استخدم موسيقى خلفية هادئة
-• حافظ على طاقة عالية طوال الفيديو`;
-        }
-        
-        function createTikTokScript(topic, audience, tone, duration, keyPoints) {
-            return `📱 TikTok Script: ${topic}
-
-🎯 الجمهور: ${audience}
-🎭 الأسلوب: ${tone}
-⏱️ المدة: ${formatDuration(duration)}
-
-═══════════════════════════════════════════════
-
-🎬 النص الكامل:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-[0:00-0:03] Hook
-${generateHook(topic)}
-
-[0:03-0:15] المحتوى
-${generatePoint(topic, 1)}
-
-[0:15-0:25] النقطة الثانية
-${generatePoint(topic, 2)}
-
-[0:25-0:30] CTA
-${generateCTA()}
-
-═══════════════════════════════════════════════
-
-💡 نصائح:
-• استخدم ترجمات (Captions)• موسيقى تريند
-• انتقالات سريعة
-• تعابير وجه واضحة`;
-        }
-        
-        function createInstagramScript(topic, audience, tone, duration, keyPoints) {
-            return `📷 Instagram Reels: ${topic}
-
-🎯 الجمهور: ${audience}
-🎭 الأسلوب: ${tone}
-⏱️ المدة: ${formatDuration(duration)}
-
-═══════════════════════════════════════════════
-
-🎬 السيناريو:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-[الثواني الأولى]
-${generateHook(topic)}
-
-[المحتوى الرئيسي]
-${generatePoint(topic, 1)}
-
-${generatePoint(topic, 2)}
-
-[النهاية]
-${generateCTA()}
-
-═══════════════════════════════════════════════
-
-📌 هاشتاقات مقترحة:
-#${topic.replace(/\s/g, '_')} #نصائح #محتوى #reels`;
-        }
-        
-        function createEducationalScript(topic, audience, tone, duration, keyPoints) {
-            return `🎓 فيديو تعليمي: ${topic}
-
-🎯 المستوى: ${audience}
-🎭 الأسلوب: ${tone}
-⏱️ المدة: ${formatDuration(duration)}
-
-═══════════════════════════════════════════════
-
-📖 هيكل الدرس:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📌 الأهداف التعليمية:
-1. فهم ${topic} بشكل شامل
-2. القدرة على التطبيق العملي
-3. تجنب الأخطاء الشائعة
-═══════════════════════════════════════════════
-
-🎥 المقدمة (10% من الوقت)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-"مرحباً بكم في هذا الدرس عن ${topic}."
-
-"في هذا الدرس، سنتعلم:"
-"• الهدف الأول"
-"• الهدف الثاني"
-"• الهدف الثالث"
-
-"لنبدأ!"
-
-═══════════════════════════════════════════════
-
-📚 المحتوى (80% من الوقت)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-الجزء الأول: النظرية
-───────────────────
-${generatePoint(topic, 1)}
-
-الجزء الثاني: التطبيق
-────────────────────
-${generatePoint(topic, 2)}
-
-الجزء الثالث: الأمثلة
-────────────────────
-${generatePoint(topic, 3)}
-
-${keyPoints ? `\nملاحظات إضافية:\n─────────────────\n${keyPoints}` : ''}
-
-═══════════════════════════════════════════════
-
-✅ الخاتمة (10% من الوقت)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-"ملخص ما تعلمناه:"
-"• النقطة الأولى"
-"• النقطة الثانية"
-"• النقطة الثالثة"
-
-"الواجب العملي: ${generateQuestion(topic)}"
-
-"شكراً للمتابعة، وبالتوفيق!"`;
-        }
-        
-        function generateHook(topic) {            const hooks = [
-                `${topic} أسهل مما تتخيل!`,
-                `سر ${topic} اللي ما حد يعرفه!`,
-                `كيف تتقن ${topic} في وقت قياسي؟`,
-                `${topic} بطريقة مختلفة تماماً!`,
-                `الأخطاء القاتلة في ${topic}!`
-            ];
-            return hooks[Math.floor(Math.random() * hooks.length)];
-        }
-        
-        function generatePoint(topic, num) {
-            const points = [
-                `ابدأ بـ ${topic} من خلال تحديد أهدافك بوضوح. هذا الأساس اللي راح يبني عليه كل شيء.`,
-                `ركز على الجودة قبل الكمية. ${topic} يحتاج صبر ومثابرة.`,
-                `استخدم الأدوات المناسبة لـ ${topic} باش توفر وقتك وجهدك.`,
-                `تعلم من تجارب الآخرين في ${topic} وتجنب الأخطاء الشائعة.`,
-                `طبق اللي تعلمته فوراً. ${topic} يحتاج ممارسة مستمرة.`
-            ];
-            return points[(num - 1) % points.length];
-        }
-        
-        function generateCTA() {
-            const ctas = [
-                "Follow للمزيد من النصائح! 👆",
-                "Save الفيديو عشان ما تضيعه! 💾",
-                "Share مع أصحابك اللي يحتاجوه! 📤",
-                "Comment برأيك! 💬"
-            ];
-            return ctas[Math.floor(Math.random() * ctas.length)];
-        }
-        
-        function generateQuestion(topic) {
-            return `شنو أكبر تحدي واجهته في ${topic}؟`;
-        }
-        
-        function formatDuration(seconds) {
-            if (seconds < 60) return `${seconds} ثانية`;
-            if (seconds < 3600) return `${Math.floor(seconds / 60)} دقيقة`;
-            return `${Math.floor(seconds / 60)} دقيقة`;
-        }
-        
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-        
-        function copyScript() {
-            navigator.clipboard.writeText(currentScript).then(() => {
-                alert('تم نسخ السيناريو بنجاح! ✅');            });
-        }
-        
-        function downloadScript() {
-            const blob = new Blob([currentScript], { type: 'text/plain;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `script-${Date.now()}.txt`;
-            link.click();
-        }
-    </script>
 </body>
 </html>

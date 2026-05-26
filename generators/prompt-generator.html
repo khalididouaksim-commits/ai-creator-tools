@@ -1,452 +1,377 @@
+<!-- generators/prompt-generator.html -->
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مولد الـ Prompts - Content Tools</title>
-    <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --prompt-primary: #10b981; /* Green for AI prompts */
-            --prompt-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .generator-page {
-            padding: 3rem 0;
-            min-height: calc(100vh - 300px);
-            background: #f3f4f6;
-        }
-        
-        .generator-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-        
-        .generator-header {
-            background: var(--prompt-gradient);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-        
-        .prompt-builder {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 600px;
-        }
-        
-        .controls-panel {
-            padding: 2rem;
-            background: white;
-            border-left: 1px solid #e5e7eb;
-            overflow-y: auto;
-            max-height: 800px;
-        }
-                .preview-panel {
-            padding: 2rem;
-            background: #1f2937; /* Dark code background */
-            color: #e5e7eb;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #374151;
-        }
-        
-        .form-group input[type="text"],
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: #f9fafb;
-        }
-        
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--prompt-primary);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-        
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .preset-chips {
-            display: flex;            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .chip {
-            padding: 0.4rem 1rem;
-            background: #ecfdf5;
-            color: #065f46;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border: 1px solid #a7f3d0;
-            transition: all 0.2s;
-        }
-        
-        .chip:hover, .chip.active {
-            background: var(--prompt-primary);
-            color: white;
-            border-color: var(--prompt-primary);
-        }
-        
-        .prompt-output-box {
-            background: #111827;
-            border: 1px solid #374151;
-            border-radius: 10px;
-            padding: 1.5rem;
-            flex-grow: 1;
-            position: relative;
-            margin-bottom: 1rem;
-            font-family: 'Courier New', Courier, monospace;
-            line-height: 1.6;
-            color: #a7f3d0;
-            white-space: pre-wrap;
-            overflow-y: auto;
-        }
-        
-        .prompt-actions {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .btn-action {
-            flex: 1;
-            padding: 0.75rem;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: transform 0.2s;
-        }
-        
-        .btn-copy {
-            background: var(--prompt-primary);
-            color: white;
-        }
-        
-        .btn-copy:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-        
-        .btn-reset {
-            background: #4b5563;
-            color: white;
-        }
-        
-        .btn-reset:hover {
-            background: #374151;
-            transform: translateY(-2px);
-        }
-        
-        /* Custom Scrollbar for Preview */
-        .prompt-output-box::-webkit-scrollbar {
-            width: 8px;
-        }
-        .prompt-output-box::-webkit-scrollbar-track {
-            background: #1f2937; 
-        }
-        .prompt-output-box::-webkit-scrollbar-thumb {
-            background: #4b5563; 
-            border-radius: 4px;
-        }
-        
-        @media (max-width: 968px) {
-            .prompt-builder {
-                grid-template-columns: 1fr;
-            }
-            .controls-panel {
-                border-left: none;
-                border-bottom: 1px solid #e5e7eb;
-                max-height: none;
-            }
-        }
-    </style>
-</head><body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">
-                <i class="fas fa-bolt" style="color: var(--prompt-primary);"></i>
-                <span>Content Tools</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="../index.html">الرئيسية</a></li>
-                <li><a href="../index.html#generators">الأدوات</a></li>
-            </ul>
+  <title>AI Prompt Generator</title>
+
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+
+    body{
+      background:#050816;
+      color:white;
+      font-family:Arial;
+      padding:20px;
+    }
+
+    .container{
+      max-width:1000px;
+      margin:auto;
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:30px;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+    }
+
+    select,button{
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      background:#111827;
+      color:white;
+      font-size:16px;
+    }
+
+    button{
+      cursor:pointer;
+      background:linear-gradient(90deg,#7c3aed,#06b6d4);
+      font-weight:bold;
+    }
+
+    .prompts-grid{
+      display:grid;
+      gap:20px;
+      margin-top:35px;
+    }
+
+    .prompt-card{
+      background:#111827;
+      border:1px solid #1f2937;
+      border-radius:18px;
+      padding:20px;
+    }
+
+    .prompt-text{
+      line-height:1.8;
+      font-size:17px;
+      margin-bottom:15px;
+      white-space:pre-line;
+    }
+
+    .card-buttons{
+      display:flex;
+      gap:10px;
+    }
+
+    .small-btn{
+      flex:1;
+      padding:10px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      background:#1f2937;
+      color:white;
+    }
+
+    .section{
+      margin-top:50px;
+    }
+
+    .section-title{
+      margin-bottom:20px;
+      font-size:24px;
+    }
+
+    .mini-card{
+      background:#0f172a;
+      border:1px solid #1e293b;
+      padding:15px;
+      border-radius:14px;
+      margin-bottom:12px;
+    }
+
+  </style>
+
+</head>
+<body>
+
+<div class="container">
+
+  <h1>🎬 AI Prompt Generator</h1>
+
+  <div class="controls">
+
+    <select id="genre">
+      <option>Horror</option>
+      <option>Sci-Fi</option>
+      <option>Mystery</option>
+      <option>Fantasy</option>
+      <option>Historical</option>
+      <option>Action</option>
+      <option>Documentary</option>
+      <option>Funny</option>
+    </select>
+
+    <select id="style">
+      <option>Cinematic</option>
+      <option>Hyper Realistic</option>
+      <option>Dark</option>
+      <option>Anime</option>
+      <option>Vintage</option>
+      <option>Dreamcore</option>
+    </select>
+
+    <select id="platform">
+      <option>Veo3</option>
+      <option>Midjourney</option>
+      <option>YouTube Shorts</option>
+      <option>TikTok</option>
+      <option>Instagram Reels</option>
+    </select>
+
+    <button onclick="generatePrompts()">
+      Generate 5 Prompts
+    </button>
+
+  </div>
+
+  <div class="prompts-grid" id="promptsGrid"></div>
+
+  <div class="section">
+
+    <h2 class="section-title">⭐ Saved Prompts</h2>
+
+    <div id="savedPrompts"></div>
+
+  </div>
+
+  <div class="section">
+
+    <h2 class="section-title">🕘 Prompt History</h2>
+
+    <div id="history"></div>
+
+  </div>
+
+</div>
+
+<script>
+
+const scenes = [
+  "abandoned laboratory",
+  "mysterious dark forest",
+  "futuristic city",
+  "ancient underground temple",
+  "secret military base",
+  "stormy mountain",
+  "forgotten civilization",
+  "haunted hospital"
+];
+
+const cameraShots = [
+  "cinematic wide shot",
+  "dramatic close-up",
+  "aerial drone shot",
+  "tracking camera movement",
+  "handheld realistic shot"
+];
+
+const lighting = [
+  "moody lighting",
+  "dramatic shadows",
+  "neon glow",
+  "volumetric fog lighting",
+  "golden cinematic lighting"
+];
+
+const atmosphere = [
+  "intense atmosphere",
+  "suspenseful mood",
+  "dark emotional tone",
+  "epic cinematic energy",
+  "dreamlike environment"
+];
+
+const details = [
+  "ultra detailed",
+  "8k realistic",
+  "high quality textures",
+  "professional composition",
+  "masterpiece quality"
+];
+
+function randomItem(arr){
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generatePrompts(){
+
+  const genre =
+  document.getElementById("genre").value;
+
+  const style =
+  document.getElementById("style").value;
+
+  const platform =
+  document.getElementById("platform").value;
+
+  const grid =
+  document.getElementById("promptsGrid");
+
+  grid.innerHTML = "";
+
+  let generatedPrompts = [];
+
+  for(let i=0; i<5; i++){
+
+    let prompt = `
+${randomItem(cameraShots)} of a ${genre} scene inside a ${randomItem(scenes)},
+${style} style,
+${randomItem(lighting)},
+${randomItem(atmosphere)},
+created for ${platform},
+${randomItem(details)}
+`;
+
+    generatedPrompts.push(prompt);
+
+    grid.innerHTML += `
+
+      <div class="prompt-card">
+
+        <div class="prompt-text">
+          ${prompt}
         </div>
-    </nav>
 
-    <!-- Prompt Generator Page -->
-    <section class="generator-page">
-        <div class="container">
-            <div class="generator-container">
-                <div class="generator-header">
-                    <h1><i class="fas fa-robot"></i> مولد الـ Prompts الاحترافي</h1>
-                    <p>اصنع أوامر ذكية ومعقدة للذكاء الاصطناعي في ثوانٍ</p>
-                </div>
-                
-                <div class="prompt-builder">
-                    <!-- Controls Panel -->
-                    <div class="controls-panel">
-                        <h3 style="margin-bottom: 1.5rem; color: #374151;">
-                            <i class="fas fa-sliders-h" style="color: var(--prompt-primary);"></i> 
-                            إعدادات الأمر
-                        </h3>
+        <div class="card-buttons">
 
-                        <!-- Presets -->
-                        <div class="form-group">
-                            <label>القوالب الجاهزة</label>
-                            <div class="preset-chips">
-                                <div class="chip active" onclick="applyPreset('content')">📝 مقال / محتوى</div>
-                                <div class="chip" onclick="applyPreset('coding')">💻 برمجة</div>
-                                <div class="chip" onclick="applyPreset('marketing')">📢 تسويق</div>
-                                <div class="chip" onclick="applyPreset('image')">🎨 وصف صورة</div>
-                            </div>
-                        </div>
+          <button class="small-btn"
+          onclick='copyPrompt(${JSON.stringify(prompt)})'>
+            Copy
+          </button>
 
-                        <div class="form-group">
-                            <label>الدور (Role)</label>
-                            <select id="role">
-                                <option value="expert">خبير محترف</option>
-                                <option value="teacher">معلم / مدرب</option>
-                                <option value="copywriter">كاتب إعلانات</option>
-                                <option value="critic">ناقد فني</option>                                <option value="seo">خبير SEO</option>
-                                <option value="custom">مخصص...</option>
-                            </select>
-                            <input type="text" id="customRole" placeholder="مثال: محامي خبير في القضايا التجارية..." style="display:none; margin-top:0.5rem;">
-                        </div>
+          <button class="small-btn"
+          onclick='savePrompt(${JSON.stringify(prompt)})'>
+            Save
+          </button>
 
-                        <div class="form-group">
-                            <label>المهمة (Task)</label>
-                            <input type="text" id="task" placeholder="ماذا تريد من الذكاء الاصطناعي أن يفعل؟" value="اكتب مقالاً شاملاً">
-                        </div>
-
-                        <div class="form-group">
-                            <label>الموضوع (Topic)</label>
-                            <input type="text" id="topic" placeholder="مثال: فوائد الذكاء الاصطناعي في التعليم" value="تطوير تطبيقات الويب">
-                        </div>
-
-                        <div class="form-group">
-                            <label>الجمهور المستهدف (Audience)</label>
-                            <input type="text" id="audience" placeholder="لمن توجه هذا المحتوى؟" value="المبرمجين المبتدئين">
-                        </div>
-
-                        <div class="form-group">
-                            <label>النبرة والأسلوب (Tone)</label>
-                            <select id="tone">
-                                <option value="professional">احترافي ورسمي</option>
-                                <option value="friendly">ودي وبسيط</option>
-                                <option value="persuasive">إقناعي</option>
-                                <option value="humorous">كوميدي</option>
-                                <option value="detailed">تفصيلي ودقيق</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>تنسيق المخرجات (Format)</label>
-                            <select id="format">
-                                <option value="markdown">Markdown (نصوص وتنسيقات)</option>
-                                <option value="table">جدول</option>
-                                <option value="list">قائمة نقطية</option>
-                                <option value="code">كود برمجي</option>
-                                <option value="email">رسالة بريد إلكتروني</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>تفاصيل إضافية / قيود</label>
-                            <textarea id="constraints" placeholder="مثال: لا تستخدم المصطلحات المعقدة، اجعل المقال تحت 500 كلمة..."></textarea>
-                        </div>
-                    </div>
-                    
-                    <!-- Preview Panel -->                    <div class="preview-panel">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-                            <h3 style="color:white; margin:0;"><i class="fas fa-code"></i> النتيجة (Prompt)</h3>
-                            <span id="charCount" style="color:#9ca3af; font-size:0.9rem;">0 حرف</span>
-                        </div>
-                        
-                        <div id="output" class="prompt-output-box">
-                            <!-- Prompt will appear here -->
-                        </div>
-                        
-                        <div class="prompt-actions">
-                            <button onclick="copyPrompt()" class="btn-action btn-copy">
-                                <i class="fas fa-copy"></i> نسخ الأمر
-                            </button>
-                            <button onclick="regeneratePrompt()" class="btn-action btn-reset">
-                                <i class="fas fa-sync-alt"></i> إعادة صياغة
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 Content Tools. جميع الحقوق محفوظة</p>
-            </div>
-        </div>
-    </footer>
+      </div>
 
-    <script>
-        // Elements
-        const inputs = document.querySelectorAll('input, textarea, select');
-        const output = document.getElementById('output');
-        const charCount = document.getElementById('charCount');
-        const customRoleInput = document.getElementById('customRole');
-        const roleSelect = document.getElementById('role');
+    `;
+  }
 
-        // Toggle Custom Role Input
-        roleSelect.addEventListener('change', function() {
-            if (this.value === 'custom') {
-                customRoleInput.style.display = 'block';
-                customRoleInput.focus();
-            } else {
-                customRoleInput.style.display = 'none';
-            }
-            generate();        });
+  saveHistory(generatedPrompts);
+}
 
-        // Add Event Listeners to all inputs
-        inputs.forEach(input => {
-            input.addEventListener('input', generate);
-        });
+function copyPrompt(text){
 
-        // Initial Generation
-        generate();
+  navigator.clipboard.writeText(text);
 
-        function generate() {
-            const roleValue = roleSelect.value;
-            const role = roleValue === 'custom' ? customRoleInput.value : roleSelect.options[roleSelect.selectedIndex].text;
-            const task = document.getElementById('task').value;
-            const topic = document.getElementById('topic').value;
-            const audience = document.getElementById('audience').value;
-            const tone = document.getElementById('tone').options[document.getElementById('tone').selectedIndex].text;
-            const format = document.getElementById('format').options[document.getElementById('format').selectedIndex].text;
-            const constraints = document.getElementById('constraints').value;
+  alert("Prompt copied!");
+}
 
-            // Build the Prompt Logic
-            let prompt = '';
+function savePrompt(prompt){
 
-            // 1. System/Role Definition
-            if (role) {
-                prompt += `تصرف كـ ${role}. `;
-            }
+  let saved =
+  JSON.parse(localStorage.getItem("savedPrompts")) || [];
 
-            // 2. Context & Task
-            prompt += `مهمتك هي: ${task}. `;
-            if (topic) {
-                prompt += `الموضوع المحدد هو "${topic}". `;
-            }
+  saved.push(prompt);
 
-            // 3. Audience
-            if (audience) {
-                prompt += `الجمهور المستهدف هو: ${audience}. يرجى مراعاة مستوى فهمهم واهتماماتهم. `;
-            }
+  localStorage.setItem(
+    "savedPrompts",
+    JSON.stringify(saved)
+  );
 
-            // 4. Tone & Style
-            prompt += `استخدم نبرة ${tone}. `;
+  loadSavedPrompts();
+}
 
-            // 5. Constraints
-            if (constraints) {
-                prompt += `\n\n⚠️ القيود والتعليمات:\n${constraints}`;
-            }
+function loadSavedPrompts(){
 
-            // 6. Formatting
-            prompt += `\n\n📦 تنسيق المخرجات المطلوب: ${format}.`;
-            // 7. Output Language
-            prompt += `\n🌍 اللغة المطلوبة: العربية.`;
+  let saved =
+  JSON.parse(localStorage.getItem("savedPrompts")) || [];
 
-            // Update UI
-            output.textContent = prompt.trim();
-            charCount.textContent = `${prompt.length} حرف`;
-        }
+  const container =
+  document.getElementById("savedPrompts");
 
-        function copyPrompt() {
-            const text = output.textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = document.querySelector('.btn-copy');
-                const originalContent = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
-                btn.style.background = '#059669';
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalContent;
-                    btn.style.background = 'var(--prompt-primary)';
-                }, 2000);
-            });
-        }
+  container.innerHTML = "";
 
-        function regeneratePrompt() {
-            // Add a small visual shake or animation
-            output.style.transform = "scale(0.99)";
-            setTimeout(() => output.style.transform = "scale(1)", 100);
-            generate();
-        }
+  saved.forEach(prompt => {
 
-        // Presets Logic
-        function applyPreset(type) {
-            // Reset active chip
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            event.target.classList.add('active');
+    container.innerHTML += `
+      <div class="mini-card">
+        ${prompt}
+      </div>
+    `;
+  });
+}
 
-            if (type === 'content') {
-                document.getElementById('task').value = 'اكتب مقالاً شاملاً وجذاباً';
-                document.getElementById('tone').value = 'friendly';
-                document.getElementById('format').value = 'markdown';
-                document.getElementById('constraints').value = 'استخدم العناوين الفرعية (H2, H3)، وقدم أمثلة عملية.';
-            } else if (type === 'coding') {
-                document.getElementById('role').value = 'expert';
-                document.getElementById('task').value = 'اكتب كوداً برمجياً كاملاً';
-                document.getElementById('format').value = 'code';
-                document.getElementById('constraints').value = 'أضف تعليقات توضيحية للكود، وتأكد من معالجة الأخطاء المحتملة (Error Handling).';
-            } else if (type === 'marketing') {
-                document.getElementById('role').value = 'copywriter';
-                document.getElementById('task').value = 'صمم حملة إعلانية';
-                document.getElementById('tone').value = 'persuasive';                document.getElementById('constraints').value = 'ركز على نقاط الألم (Pain Points) للعميل، واستخدم تقنية AIDA.';
-            } else if (type === 'image') {
-                document.getElementById('task').value = 'صف صورة بدقة عالية لتوليد الذكاء الاصطناعي';
-                document.getElementById('format').value = 'list';
-                document.getElementById('constraints').value = 'ركز على الإضاءة، الزوايا، الألوان، والنمط الفني.';
-            }
-            generate();
-        }
-    </script>
+function saveHistory(prompts){
+
+  let history =
+  JSON.parse(localStorage.getItem("promptHistory")) || [];
+
+  history.unshift({
+    date:new Date().toLocaleString(),
+    prompts:prompts
+  });
+
+  localStorage.setItem(
+    "promptHistory",
+    JSON.stringify(history)
+  );
+
+  loadHistory();
+}
+
+function loadHistory(){
+
+  let history =
+  JSON.parse(localStorage.getItem("promptHistory")) || [];
+
+  const container =
+  document.getElementById("history");
+
+  container.innerHTML = "";
+
+  history.slice(0,10).forEach(item => {
+
+    let promptsHTML =
+    item.prompts.map(p =>
+      `<li>${p}</li>`
+    ).join("");
+
+    container.innerHTML += `
+      <div class="mini-card">
+
+        <strong>${item.date}</strong>
+
+        <ul style="margin-top:10px">
+          ${promptsHTML}
+        </ul>
+
+      </div>
+    `;
+  });
+}
+
+loadSavedPrompts();
+loadHistory();
+
+</script>
+
 </body>
 </html>

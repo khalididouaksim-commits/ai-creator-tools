@@ -1,48 +1,57 @@
-// Navbar Scroll Effect
-window.addEventListener('scroll', () => {
-  const navbar = document.querySelector('.navbar');
-  if (window.scrollY > 50) {
-    navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
-  } else {
-    navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-  }
-});
+function randomTool() {
+  
+  const tools = [
+    
+    "generators/hook-generator.html",
+    
+    "generators/prompt-generator.html",
+    
+    "generators/script-generator.html",
+    
+    "generators/thumbnail-generator.html",
+    
+    "generators/title-generator.html"
+    
+  ];
+  
+  const random =
+    tools[Math.floor(Math.random() * tools.length)];
+  
+  window.location.href = random;
+}
 
-// Smooth Scroll
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
+function scrollTopPage() {
+  
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
   });
+  
+}
+
+/* SIMPLE FADE-IN */
+
+const cards =
+  document.querySelectorAll(
+    ".featured-card,.tool-btn,.stat-box,.quick-card"
+  );
+
+cards.forEach((card, index) => {
+  
+  card.style.opacity = "0";
+  
+  card.style.transform = "translateY(20px)";
+  
+  setTimeout(() => {
+    
+    card.style.transition =
+      "all 0.6s ease";
+    
+    card.style.opacity = "1";
+    
+    card.style.transform =
+      "translateY(0px)";
+    
+  }, index * 100);
+  
 });
-
-// Animation on Scroll
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateY(0)';
-    }
-  });
-}, observerOptions);
-
-// Observe all cards and features
-document.querySelectorAll('.generator-card, .feature').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(20px)';
-  el.style.transition = 'all 0.6s ease';
-  observer.observe(el);
-});
-
-console.log('Content Tools - Ready! 🚀');

@@ -1,0 +1,340 @@
+<!-- generators/hook-generator.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hook Generator</title>
+
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    body{
+      background:#050816;
+      color:white;
+      font-family:Arial;
+      padding:20px;
+    }
+
+    .container{
+      max-width:900px;
+      margin:auto;
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:30px;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+      margin-bottom:20px;
+    }
+
+    select,button{
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      background:#111827;
+      color:white;
+      font-size:16px;
+    }
+
+    button{
+      cursor:pointer;
+      background:linear-gradient(90deg,#7c3aed,#06b6d4);
+      font-weight:bold;
+    }
+
+    .hooks-grid{
+      display:grid;
+      gap:15px;
+      margin-top:30px;
+    }
+
+    .hook-card{
+      background:#111827;
+      border:1px solid #1f2937;
+      padding:20px;
+      border-radius:16px;
+    }
+
+    .hook-text{
+      font-size:18px;
+      margin-bottom:15px;
+      line-height:1.6;
+    }
+
+    .card-buttons{
+      display:flex;
+      gap:10px;
+    }
+
+    .small-btn{
+      flex:1;
+      padding:10px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      background:#1f2937;
+      color:white;
+    }
+
+    .history-section,
+    .saved-section{
+      margin-top:50px;
+    }
+
+    .section-title{
+      margin-bottom:20px;
+      font-size:22px;
+    }
+
+    .mini-card{
+      background:#0f172a;
+      padding:15px;
+      border-radius:12px;
+      margin-bottom:10px;
+      border:1px solid #1e293b;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🔥 AI Hook Generator</h1>
+
+  <div class="controls">
+
+    <select id="platform">
+      <option>YouTube Shorts</option>
+      <option>TikTok</option>
+      <option>Instagram Reels</option>
+    </select>
+
+    <select id="niche">
+      <option>Mystery</option>
+      <option>Science</option>
+      <option>History</option>
+      <option>Finance</option>
+      <option>Motivation</option>
+      <option>Funny</option>
+    </select>
+
+    <select id="tone">
+      <option>Viral</option>
+      <option>Dark</option>
+      <option>Suspense</option>
+      <option>Emotional</option>
+      <option>Funny</option>
+      <option>Serious</option>
+    </select>
+
+    <button onclick="generateHooks()">
+      Generate 5 Hooks
+    </button>
+
+  </div>
+
+  <div class="hooks-grid" id="hooksGrid"></div>
+
+  <div class="saved-section">
+    <h2 class="section-title">⭐ Saved Hooks</h2>
+    <div id="savedHooks"></div>
+  </div>
+
+  <div class="history-section">
+    <h2 class="section-title">🕘 History</h2>
+    <div id="history"></div>
+  </div>
+
+</div>
+
+<script>
+
+const intros = [
+  "Nobody expected",
+  "Scientists discovered",
+  "This mistake changed",
+  "The camera captured",
+  "Everything changed after",
+  "People were terrified when",
+  "No one can explain",
+  "This secret remained hidden until"
+];
+
+const subjects = [
+  "a mysterious signal",
+  "an ancient experiment",
+  "a terrifying discovery",
+  "a strange creature",
+  "a hidden truth",
+  "a forgotten document",
+  "a dangerous mistake",
+  "an impossible event"
+];
+
+const endings = [
+  "what happened next...",
+  "caught on camera.",
+  "that shocked the world.",
+  "hidden for years.",
+  "that scientists still fear.",
+  "that changed history forever.",
+  "nobody believed was real."
+];
+
+function randomItem(arr){
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateHooks(){
+
+  const hooksGrid = document.getElementById("hooksGrid");
+
+  hooksGrid.innerHTML = "";
+
+  let generatedHooks = [];
+
+  for(let i=0; i<5; i++){
+
+    let hook = `
+${randomItem(intros)} 
+${randomItem(subjects)} 
+${randomItem(endings)}
+`;
+
+    generatedHooks.push(hook);
+
+    hooksGrid.innerHTML += `
+
+      <div class="hook-card">
+
+        <div class="hook-text">
+          ${hook}
+        </div>
+
+        <div class="card-buttons">
+
+          <button class="small-btn"
+            onclick='copyHook(${JSON.stringify(hook)})'>
+            Copy
+          </button>
+
+          <button class="small-btn"
+            onclick='saveHook(${JSON.stringify(hook)})'>
+            Save
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+  }
+
+  saveHistory(generatedHooks);
+}
+
+function copyHook(text){
+  navigator.clipboard.writeText(text);
+  alert("Copied!");
+}
+
+function saveHook(hook){
+
+  let saved =
+  JSON.parse(localStorage.getItem("savedHooks")) || [];
+
+  saved.push(hook);
+
+  localStorage.setItem(
+    "savedHooks",
+    JSON.stringify(saved)
+  );
+
+  loadSavedHooks();
+}
+
+function loadSavedHooks(){
+
+  let saved =
+  JSON.parse(localStorage.getItem("savedHooks")) || [];
+
+  const container =
+  document.getElementById("savedHooks");
+
+  container.innerHTML = "";
+
+  saved.forEach(hook => {
+
+    container.innerHTML += `
+      <div class="mini-card">
+        ${hook}
+      </div>
+    `;
+  });
+}
+
+function saveHistory(hooks){
+
+  let history =
+  JSON.parse(localStorage.getItem("hooksHistory")) || [];
+
+  let item = {
+    date:new Date().toLocaleString(),
+    hooks:hooks
+  };
+
+  history.unshift(item);
+
+  localStorage.setItem(
+    "hooksHistory",
+    JSON.stringify(history)
+  );
+
+  loadHistory();
+}
+
+function loadHistory(){
+
+  let history =
+  JSON.parse(localStorage.getItem("hooksHistory")) || [];
+
+  const container =
+  document.getElementById("history");
+
+  container.innerHTML = "";
+
+  history.slice(0,10).forEach(item => {
+
+    let hooksHTML = item.hooks.map(h =>
+      `<li>${h}</li>`
+    ).join("");
+
+    container.innerHTML += `
+      <div class="mini-card">
+
+        <strong>${item.date}</strong>
+
+        <ul style="margin-top:10px">
+          ${hooksHTML}
+        </ul>
+
+      </div>
+    `;
+  });
+}
+
+loadSavedHooks();
+loadHistory();
+
+</script>
+
+</body>
+</html>
