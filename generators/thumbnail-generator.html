@@ -1,14 +1,36 @@
-<!DOCTYPE html>
-<html>
+<div class="input-group">
+  <label>ما هو موضوع أو عنوان الفيديو؟</label>
+  <input type="text" id="thumbnailTopic" placeholder="مثال: قصة الرجل المطرود من طرف أبنائه...">
+</div>
+<button onclick="generateThumbnailIdea()" class="btn-primary">⚡ تحليل وتوليد فكرة الصورة</button>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
-</head>
+<div id="thumbnailResult" class="result-box" style="display:none; margin-top:20px; padding:15px; background:rgba(255,255,255,0.02); border-radius:8px; border:1px solid rgba(255,255,255,0.05);">
+</div>
 
-<body>
-  
-</body>
-
-</html>
+<script>
+  function generateThumbnailIdea() {
+    const topic = document.getElementById('thumbnailTopic').value;
+    if (!topic) return alert('الرجاء كتابة موضوع أولاً!');
+    
+    let visualConcept = "";
+    let prompt169 = "";
+    
+    if (topic.includes('طرد') || topic.includes('رجل') || topic.includes('بيت')) {
+      visualConcept = "👨‍ رجل مسن يجلس في الشارع ليلاً وعيناه تملأهما الدموع، وفي الخلفية منزل مظلم وباب مغلق بإحكام مع إضاءة نيون خافتة توحي بالحزن الكلي.";
+      prompt169 = "Hyper-realistic cinematic photo, emotional old man sitting outside a closed dark house at night, rain drops, dramatic neon cinematic lighting, high contrast, depth of field, 8k resolution, YouTube thumbnail style --ar 16:9 --v 6.0";
+    } else {
+      visualConcept = "🔮 عنصر غامض ومشع في مركز الصورة مع شخص ينظر إليه من الخلف مذهولاً، تباين ألوان حاد بين الأزرق الداكن والبرتقالي المتوهج لجذب العين فوراً.";
+      prompt169 = "Cinematic mystery composition, glowing ancient artifact in a dark room, silhouette of a person looking at it, extreme color contrast orange and teal, hyper-detailed, photorealistic, premium web preview --ar 16:9 --style raw";
+    }
+    
+    const resultBox = document.getElementById('thumbnailResult');
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+        <h4 style="color:#fbbf24; margin-bottom:10px;">📐 التركيبة البصرية المقترحة (مقاس 16:9):</h4>
+        <p style="color:#f1f5f9; font-size:14px; margin-bottom:15px; line-height:1.6;">${visualConcept}</p>
+        
+        <h4 style="color:#38bdf8; margin-bottom:10px;">🔮 أمر توليد الخلفية بالـ AI (جاهز للنسخ):</h4>
+        <textarea readonly style="width:100%; height:80px; background:#03030e; color:#a78bfa; border:1px solid #1e1e38; padding:10px; border-radius:6px; font-family:monospace; font-size:12px; direction:ltr;">${prompt169}</textarea>
+    `;
+  }
+</script>

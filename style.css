@@ -1,4 +1,8 @@
-/* إعدادات عالمية بنكهة عصرية */
+/* ==========================================================================
+   📌 ملف المظهر العالمي المطور لـ AI STUDIO - الإصدار الزجاجي الفاخر
+   ========================================================================== */
+
+/* إعدادات تصفير الهوامش والخطوط */
 * {
     margin: 0;
     padding: 0;
@@ -6,9 +10,10 @@
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
+/* المتغيرات اللونية للمظهر الداكن السينمائي */
 :root {
     --bg-dark: #03030e;
-    --card-bg: rgba(11, 11, 30, 0.6);
+    --card-bg: rgba(11, 11, 30, 0.55);
     --border-color: rgba(255, 255, 255, 0.06);
     --accent-purple: #7c3aed;
     --accent-blue: #38bdf8;
@@ -17,33 +22,37 @@
     --text-muted: #94a3b8;
 }
 
+/* إعدادات الخلفية الإجبارية لمنع الـ Cache القديم */
 body {
-    background-color: var(--bg-dark);
-    background-image:
-        radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.05) 0px, transparent 50%);
-    color: var(--text-main);
+    background-color: #03030e !important;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.1) 0px, transparent 50%) !important;
+    background-attachment: fixed !important;
+    color: var(--text-main) !important;
     padding: 16px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    line-height: 1.5;
 }
 
-/* الهيدر السينمائي المشرق */
+/* الهيدر العلوي بنمط زجاجي احترافي */
 .main-header {
-    background: linear-gradient(135deg, rgba(11, 11, 30, 0.8), rgba(5, 5, 20, 0.8));
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 35px 20px;
+    background: rgba(11, 11, 30, 0.7) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    padding: 30px 20px;
     border-radius: 16px;
     border: 1px solid var(--border-color);
     text-align: center;
-    margin-bottom: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     position: relative;
     overflow: hidden;
 }
 
+/* خط النيون المضيء في أعلى الهيدر */
 .main-header::before {
     content: '';
     position: absolute;
@@ -55,121 +64,117 @@ body {
 }
 
 .main-header h2 {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 800;
-    background: linear-gradient(120deg, #fff, var(--accent-blue));
+    background: linear-gradient(120deg, #ffffff, var(--accent-blue));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
-    letter-spacing: -0.5px;
 }
 
 .main-header p {
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 13px;
     max-width: 600px;
     margin: 0 auto;
 }
 
-/* حاوية لوحة التحكم */
+/* حاوية لوحة التحكم والأدوات */
 .dashboard-container {
-    max-width: 1100px;
+    max-width: 1000px;
     margin: 0 auto;
     width: 100%;
 }
 
 .section-title {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--accent-gold);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
-/* شبكة كروت الـ SaaS العالمية */
+/* شبكة توزيع الكروت المتجاوبة بالكامل مع شاشات الهواتف */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+    gap: 16px;
 }
 
-/* تصميم الكارت الزجاجي الخرافي */
+/* تصميم كروت الـ Premium Glassmorphism */
 .tool-card {
-    background: var(--card-bg);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid var(--border-color);
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 16px;
-    padding: 25px;
+    padding: 20px;
     text-decoration: none;
-    color: var(--text-main);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    color: var(--text-main) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     flex-direction: column;
-    position: relative;
-    overflow: hidden;
 }
 
-.tool-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(800px circle at var(--x, 0px) var(--y, 0px), rgba(255, 255, 255, 0.04), transparent 40%);
-    z-index: 1;
-    pointer-events: none;
+/* تأثير التوهج والارتفاع عند تمرير الماوس أو الضغط بالهاتف */
+.tool-card:hover, .tool-card:active {
+    transform: translateY(-4px);
+    border-color: rgba(56, 189, 248, 0.25) !important;
+    background: rgba(15, 15, 40, 0.8) !important;
+    box-shadow: 0 12px 25px rgba(124, 58, 237, 0.08);
 }
 
-.tool-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(124, 58, 237, 0.3);
-    background: rgba(15, 15, 40, 0.8);
-    box-shadow: 0 15px 35px rgba(124, 58, 237, 0.1);
-}
-
+/* أيقونة الأداة */
 .tool-icon {
-    font-size: 36px;
-    margin-bottom: 15px;
-    background: rgba(255, 255, 255, 0.03);
-    width: 60px;
-    height: 60px;
+    font-size: 28px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: transform 0.3s;
-}
-
-.tool-card:hover .tool-icon {
-    transform: scale(1.1) rotate(5deg);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .tool-card h4 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    color: #fff;
-    margin-bottom: 8px;
+    color: #ffffff;
+    margin-bottom: 6px;
 }
 
 .tool-card p {
     color: var(--text-muted);
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.6;
 }
 
-/* الفوتر */
+/* مدخلات النصوص والصناديق بداخل الأدوات الفرعية */
+input[type="text"], textarea {
+    width: 100%;
+    padding: 12px;
+    background: #050515 !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    color: #ffffff !important;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: var(--accent-blue) !important;
+}
+
+/* الفوتر السفلي للشاشة */
 .main-footer {
     text-align: center;
     margin-top: auto;
-    padding-top: 40px;
-    padding-bottom: 20px;
-    color: rgba(148, 163, 184, 0.4);
-    font-size: 12px;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    color: rgba(148, 163, 184, 0.3);
+    font-size: 11px;
 }

@@ -1,104 +1,30 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مولد سيناريوهات المحتوى | استوديو المحتوى</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        .container { max-width: 700px; margin: 30px auto; background: #0b0b1e; padding: 25px; border-radius: 12px; border: 1px solid #1e1e38; }
-        .back-link { color: #94a3b8; text-decoration: none; font-size: 14px; display: inline-block; margin-bottom: 15px; }
-        .back-link:hover { color: #38bdf8; }
-        .input-group { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
-        input { width: 100%; padding: 14px; background: #11112d; border: 1px solid #1e1e38; color: #fff; border-radius: 8px; box-sizing: border-box; font-size: 15px; outline: none; }
-        input:focus { border-color: #7c3aed; }
-        button { width: 100%; padding: 14px; background: #7c3aed; border: none; color: white; font-weight: bold; font-size: 16px; border-radius: 8px; margin-top: 15px; cursor: pointer; }
-        button:hover { background: #6d28d9; }
-        .results { margin-top: 25px; }
-        .script-section { background: #11112d; padding: 20px; border-radius: 8px; border-left: 4px solid #7c3aed; margin-bottom: 20px; }
-        .section-tag { font-size: 13px; color: #7c3aed; font-weight: bold; margin-bottom: 8px; display: block; }
-        .script-text { font-size: 15px; color: #f1f5f9; line-height: 1.6; white-space: pre-line; }
-        .copy-layout { display: flex; justify-content: flex-end; margin-top: 10px; }
-        .copy-btn { background: #7c3aed; color: #fff; padding: 6px 14px; font-size: 13px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
+function generateScript() {
+const inputTopic = document.getElementById('topicInput').value; // الفكرة المكتوبة
 
-    <div class="container">
-        <a href="../index.html" class="back-link">🔙 العودة للوحة التحكم الرئيسي</a>
-        
-        <h2 style="color: #7c3aed; margin-bottom: 5px;">📜 مولد سيناريوهات وفيديوهات المحتوى</h2>
-        <p style="color: #94a3b8; font-size: 13px;">اكتب الفكرة لتوليد هيكل سكربت كامل مقسم إلى مشاهد جاهزة للتعليق الصوتي.</p>
+// دالة ذكية لتحديد سياق الكلام بناءً على الكلمات المفتاحية في فكرة المستخدم
+let contextIntro = "[صوت درامي وموسيقى تناسب الحدث]";
+let contextBody = "";
+let contextOutro = "";
 
-        <div class="input-group">
-            <label style="color: #fbbf24; font-size: 14px;">ما هو موضوع الفيديو الأساسي؟</label>
-            <input type="text" id="scriptInput" placeholder="مثال: لغز ممر دياتلوف الغامض...">
-        </div>
-        
-        <button onclick="generateScript()">توليد السكربت الكامل 🚀</button>
+if (inputTopic.includes('طرد') || inputTopic.includes('بيت') || inputTopic.includes('رجل')) {
+// سياق القضايا الاجتماعية أو العائلية الواقعية
+contextIntro = "[صوت هادئ ومؤثر] البيوت أسرار، لكن ما حدث في هذه القصة كسر كل القوانين الإنسانية...";
+contextBody = `تبدأ تفاصيل هذه القضية المؤثرة عندما واجه هذا الرجل أصعب موقف يمكن أن يمر به أب، حيث تم طرده من منزله. الشهود والمقربون صُدموا من هذا التصرف، وبدأت التساؤلات تطرح حول الجحود العائلي والدوافع التي جعلت الأبناء يقدمون على هذه الخطوة الصادمة...`;
+contextOutro = "في النهاية، القصة تطرح سؤالاً عميقاً حول العلاقات العائلية. ما هو رأيكم في تصرف الأبناء؟ شاركونا في التعليقات.";
+} else if (inputTopic.includes('صخرة') || inputTopic.includes('جيولوجيا') || inputTopic.includes('أرض')) {
+// سياق علمي أو جيولوجي
+contextIntro = "[صوت قوي وموسيقى استكشافية] ظواهر عجز العلم عن تفسيرها لسنوات طويلة...";
+contextBody = `عند تحليل التكوينات الجيولوجية لهذه المنطقة، نجد أن التفسيرات الطبيعية تقف عاجزة أمام هذا اللغز. يرى الخبراء أن العوامل المناخية ليست كافية لتفسير هذا الهيكل الجيولوجي، مما يفتح الباب أمام فرضيات أخرى...`;
+contextOutro = "العلم ما زال يكتشف كل يوم أسراراً جديدة. لا تنسوا الاشتراك لمتابعة التحقيقات القادمة.";
+} else {
+// السياق الغامض العام (مثل ريتشارد بيرد أو ديتلوف) كخيار افتراضي
+contextIntro = "[صوت غامض وموسيقى تشويقية شديدة] هل يمكن لمكان واحد على الأرض أن يخفي سراً مرعباً؟";
+contextBody = `بدأت الحكاية عندما تم العثور على وثائق سرية تكشف تفاصيل غامضة حول ${inputTopic}. الشهود أكدوا وجود ظواهر غير طبيعية، والأدلة تقودنا إلى فرضية وجود تستر كامل على ما حدث...`;
+contextOutro = "في النهاية، يبقى هذا الملف واحداً من أكبر الألغاز التي لم تجد جواباً شافياً.";
+}
 
-        <div class="results" id="scriptContainer"></div>
-    </div>
-
-    <script>
-        function generateScript() {
-            const keyword = document.getElementById('scriptInput').value.trim();
-            const container = document.getElementById('scriptContainer');
-            container.innerHTML = '';
-
-            if (keyword === '') {
-                alert('الرجاء كتابة موضوع السكربت أولاً! 🎯');
-                return;
-            }
-
-            // بناء نص السكربت بشكل ديناميكي بناءً على الكلمة المفتاحية
-            const sections = [
-                {
-                    tag: "المشهد الأول: الخطاف الافتتاحي (00:00 - 00:30) ⏳",
-                    text: `[صوت غامض وموسيقى تشويقية]
-                    هل يمكن لمكان واحد على الأرض أن يخفي سراً مرعباً يتجنب الجميع الحديث عنه؟ اليوم سنغوص في أعماق القصة الكاملة لـ (${keyword}). جهز نفسك، لأن ما ستسمعه الآن قد يغير نظرتك للأمور تماماً كلياً..`
-                },
-                {
-                    tag: "المشهد الثاني: العرض وتفاصيل اللغز (00:30 - 12:00) 🔍",
-                    text: `[انتقال بصري - موسيقى هادئة وغامضة]
-                    بدأت الحكاية عندما تم العثور على وثائق سرية تكشف تفاصيل لأول مرة حول (${keyword}). 
-                    الشهود أكدوا أن هناك ظواهر غير طبيعية حدثت في ذلك المكان، والعلماء وقفوا عاجزين عن تفسير الكارثة. 
-                    الأدلة المتوفرة تقودنا إلى فرضيتين: إما أن الأمر كان تجربة محرمة تم التستر عليها، أو أن هناك قوى أخرى تدخلت في اللحظات الأخيرة وحسمت المصير المأساوي..`
-                },
-                {
-                    tag: "المشهد الثالث: الخاتمة والدعوة للتفاعل (12:00 - 15:00) 🎯",
-                    text: `[موسيقى النهاية]
-                    في النهاية، يبقى ملف (${keyword}) واحداً من أكبر الألغاز التي لم تجد جواباً شافياً حتى يومنا هذا. 
-                    في رأيك، ما هي الفرضية الأقرب للحقيقة؟ اكتب لي رأيك في التعليقات، ولا تنسى الاشتراك في القناة وتفعيل الجرس لتتابع معنا فك الألغاز القادمة في "أرشيف الغموض".`
-                }
-            ];
-
-            sections.forEach(sec => {
-                const card = document.createElement('div');
-                card.className = 'script-section';
-                card.innerHTML = `
-                    <span class="section-tag">${sec.tag}</span>
-                    <p class="script-text">${sec.text}</p>
-                    <div class="copy-layout">
-                        <button class="copy-btn" onclick="copyText(this)">نسخ المشهد 📋</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function copyText(button) {
-            const text = button.parentElement.previousElementSibling.innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = button.innerText;
-                button.innerText = 'تم النسخ! ✓';
-                button.style.background = '#10b981';
-                setTimeout(() => {
-                    button.innerText = originalText;
-                    button.style.background = '#7c3aed';
-                }, 1500);
-            });
-        }
-    </script>
-</body>
-</html>
+// طباعة المشاهد في الواجهة بدقة بناءً على السياق المكتشف
+document.getElementById('view1').innerText = `${contextIntro}\n${inputTopic}...`;
+document.getElementById('view2').innerText = contextBody;
+document.getElementById('view3').innerText = contextOutro;
+}
