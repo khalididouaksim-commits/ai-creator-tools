@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مولد الخطافات الاحترافي | استوديو المحتوى</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .container { max-width: 650px; margin: 30px auto; background: #0b0b1e; padding: 25px; border-radius: 12px; border: 1px solid #1e1e38; }
+        .back-link { color: #94a3b8; text-decoration: none; font-size: 14px; display: inline-block; margin-bottom: 15px; }
+        .back-link:hover { color: #38bdf8; }
+        .input-group { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
+        input { width: 100%; padding: 14px; background: #11112d; border: 1px solid #1e1e38; color: #fff; border-radius: 8px; box-sizing: border-box; font-size: 15px; outline: none; }
+        input:focus { border-color: #7c3aed; }
+        button { width: 100%; padding: 14px; background: #7c3aed; border: none; color: white; font-weight: bold; font-size: 16px; border-radius: 8px; margin-top: 15px; cursor: pointer; }
+        button:hover { background: #6d28d9; }
+        .results { margin-top: 25px; }
+        .hook-card { background: #11112d; padding: 18px; border-radius: 8px; border-right: 4px solid #fbbf24; margin-bottom: 15px; }
+        .hook-type { font-size: 12px; color: #fbbf24; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
+        .hook-text { font-size: 15px; color: #f1f5f9; line-height: 1.5; margin-bottom: 10px; display: block; }
+        .copy-btn { background: #fbbf24; color: #050514; padding: 5px 12px; font-size: 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="../index.html" class="back-link">🔙 العودة للوحة التحكم الرئيسي</a>
+        
+        <h2 style="color: #fbbf24; margin-bottom: 5px;">🪝 مولد خطافات الفيديوهات الفيروسية</h2>
+        <p style="color: #94a3b8; font-size: 13px;">اصنع مقدمات خاطفة للأنظار تضمن بقاء المشاهد لأطول مدة ممكنة.</p>
+
+        <div class="input-group">
+            <label style="color: #38bdf8; font-size: 14px;">ما هو السر أو الموضوع الغامض في الفيديو؟</label>
+            <input type="text" id="hookInput" placeholder="مثال: سر ممر دياتلوف، الجليد المخفي، حقيقة ريتشارد بيرد...">
+        </div>
+        
+        <button onclick="generateHooks()">توليد مقدمات فيروسية 🔥</button>
+
+        <div class="results" id="hooksContainer"></div>
+    </div>
+
+    <script>
+        function generateHooks() {
+            const keyword = document.getElementById('hookInput').value.trim();
+            const container = document.getElementById('hooksContainer');
+            container.innerHTML = '';
+
+            if (keyword === '') {
+                alert('الرجاء كتابة الفكرة أولاً يا صديقي! 🎯');
+                return;
+            }
+
+            // أنواع الخطافات السيكولوجية للمحتوى الغامض والقصصي
+            const hooks = [
+                {
+                    type: "أسلوب الصدمة المفاجئة 🚨",
+                    text: "كل ما أخبروك به عن [keyword] هو كذبة تم التخطيط لها بدقة.. الحقيقة المرعبة بدأت عندما..."
+                },
+                {
+                    type: "أسلوب السؤال الغامض ❓",
+                    text: "هل تساءلت يوماً لماذا تم إغلاق ملف [keyword] بشكل مفاجئ ومنع أي شخص من الاقتراب منه؟ السر يكمن في هذه الوثيقة.."
+                },
+                {
+                    type: "أسلوب سرد القصة المشوقة 📖",
+                    text: "في تمام الساعة الثالثة صباحاً، كان كل شيء يسير بشكل طبيعي، حتى ظهر [keyword] وتسبب في حدث غيّر التاريخ كلياً.."
+                }
+            ];
+
+            hooks.forEach(item => {
+                const finalHook = item.text.replace(/\[keyword\]/g, keyword);
+                
+                const card = document.createElement('div');
+                card.className = 'hook-card';
+                card.innerHTML = `
+                    <div class="hook-type">${item.type}</div>
+                    <span class="hook-text">${finalHook}</span>
+                    <button class="copy-btn" onclick="copyHook(this, '${finalHook}')">نسخ الخطاف 📋</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function copyHook(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'تم النسخ! ✓';
+                button.style.background = '#10b981';
+                button.style.color = '#fff';
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.background = '#fbbf24';
+                    button.style.color = '#050514';
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>
