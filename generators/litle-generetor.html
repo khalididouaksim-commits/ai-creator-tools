@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مولد العناوين الجاذبة | استوديو المحتوى</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background: #0b0b1e;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #1e1e38;
+        }
+        
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 15px;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover {
+            color: #38bdf8;
+        }
+
+        .input-group {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #11112d;
+            border: 1px solid #1e1e38;
+            color: #fff;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #7c3aed;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #7c3aed;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 8px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #6d28d9;
+        }
+
+        .results {
+            margin-top: 25px;
+        }
+
+        .title-item {
+            background: #11112d;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #38bdf8;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .title-text {
+            font-size: 15px;
+            color: #f1f5f9;
+            line-height: 1.4;
+        }
+
+        .copy-btn {
+            background: #38bdf8;
+            color: #050514;
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: 6px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+
+        .copy-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="../index.html" class="back-link">🔙 العودة للوحة التحكم الرئيسي</a>
+        
+        <h2 style="color: #38bdf8; margin-bottom: 5px;">✨ مولد العناوين الجاذبة للأنظار</h2>
+        <p style="color: #94a3b8; font-size: 13px;">اكتب الفكرة الأساسية أو الكلمة المفتاحية لصياغة عناوين فيروسية فوراً.</p>
+
+        <div class="input-group">
+            <label style="color: #fbbf24; font-size: 14px;">ما هو موضوع الفيديو أو التجربة؟</label>
+            <input type="text" id="topicInput" placeholder="مثال: ممر دياتلوف، تجربة الكهرباء الساكنة، ريتشارد بيرد...">
+        </div>
+        
+        <button onclick="generateTitles()">توليد العناوين الاحترافية 🔥</button>
+
+        <div class="results" id="resultsContainer"></div>
+    </div>
+
+    <script>
+        // مصفوفة القوالب الفيروسية المخصصة لرفع الـ CTR
+        const templates = [
+            "السر المرعب وراء [keyword] الذي أخفوه عن العالم تماماً!",
+            "ماذا حدث في الحقيقة بـ [keyword]؟ وثائق تكشف لأول مرة",
+            "5 حقائق صادمة عن [keyword] ستغير نظرتك للأمور!",
+            "التجربة المحرمة: كيف تسبب [keyword] في هذه الكارثة؟",
+            "القصة الكاملة لـ [keyword]: من البداية الغامضة إلى النهاية المأساوية",
+            "علماء كسروا القوانين لتجربة [keyword].. والنتيجة مرعبة!",
+            "لماذا تم حظر الحديث عن [keyword] بشكل نهائي؟"
+        ];
+
+        function generateTitles() {
+            const keyword = document.getElementById('topicInput').value.trim();
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+
+            if (keyword === '') {
+                alert('الرجاء كتابة موضوع أولاً يا صديقي! 🎯');
+                return;
+            }
+
+            templates.forEach(template => {
+                const finalTitle = template.replace(/\[keyword\]/g, keyword);
+                
+                const item = document.createElement('div');
+                item.className = 'title-item';
+                item.innerHTML = `
+                    <span class="title-text">${finalTitle}</span>
+                    <button class="copy-btn" onclick="copyTitle(this, '${finalTitle}')">نسخ 📋</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // دالة نسخ النص إلى الحافظة بشكل ذكي وسريع
+        function copyTitle(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'تم النسخ! ✓';
+                button.style.background = '#10b981'; // تغيير اللون للأخضر مؤقتاً
+                button.style.color = '#fff';
+                
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.background = '#38bdf8';
+                    button.style.color = '#050514';
+                }, 1500);
+            }).catch(err => {
+                alert('عذراً، حدث خطأ أثناء النسخ!');
+            });
+        }
+    </script>
+</body>
+</html>
