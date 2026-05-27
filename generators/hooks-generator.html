@@ -3,191 +3,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hook Generator</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="../style.css">
+<title>Hook Generator</title>
 
-  <style>
-    body{
-      background:#050816;
-      color:white;
-      font-family:Arial;
-      padding:20px;
-    }
+<link rel="stylesheet" href="../style.css">
 
-    .container{
-      max-width:900px;
-      margin:auto;
-    }
+<style>
 
-    h1{
-      text-align:center;
-      margin-bottom:30px;
-    }
+body{
+  background:#050816;
+  color:white;
+  font-family:Arial;
+  padding:20px;
+}
 
-    .controls{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:15px;
-      margin-bottom:20px;
-    }
+.container{
+  max-width:1000px;
+  margin:auto;
+}
 
-    select,button{
-      padding:14px;
-      border:none;
-      border-radius:12px;
-      background:#111827;
-      color:white;
-      font-size:16px;
-    }
+h1{
+  text-align:center;
+  margin-bottom:30px;
+}
 
-    button{
-      cursor:pointer;
-      background:linear-gradient(90deg,#7c3aed,#06b6d4);
-      font-weight:bold;
-    }
+.controls{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
 
-    .hooks-grid{
-      display:grid;
-      gap:15px;
-      margin-top:30px;
-    }
+select,button{
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#111827;
+  color:white;
+  font-size:16px;
+}
 
-    .hook-card{
-      background:#111827;
-      border:1px solid #1f2937;
-      padding:20px;
-      border-radius:16px;
-    }
+button{
+  cursor:pointer;
+  background:linear-gradient(90deg,#7c3aed,#06b6d4);
+  font-weight:bold;
+}
 
-    .hook-text{
-      font-size:18px;
-      margin-bottom:15px;
-      line-height:1.6;
-    }
+.hooks-grid{
+  display:grid;
+  gap:20px;
+  margin-top:35px;
+}
 
-    .card-buttons{
-      display:flex;
-      gap:10px;
-    }
+.hook-card{
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:18px;
+  padding:20px;
+}
 
-    .small-btn{
-      flex:1;
-      padding:10px;
-      border:none;
-      border-radius:10px;
-      cursor:pointer;
-      background:#1f2937;
-      color:white;
-    }
+.hook-text{
+  line-height:1.8;
+  font-size:20px;
+  margin-bottom:15px;
+}
 
-    .history-section,
-    .saved-section{
-      margin-top:50px;
-    }
+.card-buttons{
+  display:flex;
+  gap:10px;
+}
 
-    .section-title{
-      margin-bottom:20px;
-      font-size:22px;
-    }
+.small-btn{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:#1f2937;
+  color:white;
+}
 
-    .mini-card{
-      background:#0f172a;
-      padding:15px;
-      border-radius:12px;
-      margin-bottom:10px;
-      border:1px solid #1e293b;
-    }
-  </style>
+.section{
+  margin-top:50px;
+}
+
+.section-title{
+  margin-bottom:20px;
+  font-size:24px;
+}
+
+.mini-card{
+  background:#0f172a;
+  border:1px solid #1e293b;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+
+</style>
+
 </head>
-
 <body>
 
 <div class="container">
 
-  <h1>🔥 AI Hook Generator</h1>
+<h1>🎣 AI Hook Generator</h1>
 
-  <div class="controls">
+<div class="controls">
 
-    <select id="platform">
-      <option>YouTube Shorts</option>
-      <option>TikTok</option>
-      <option>Instagram Reels</option>
-    </select>
+<select id="genre">
+  <option>Horror</option>
+  <option>Science</option>
+  <option>Finance</option>
+</select>
 
-    <select id="niche">
-      <option>Mystery</option>
-      <option>Science</option>
-      <option>History</option>
-      <option>Finance</option>
-      <option>Motivation</option>
-      <option>Funny</option>
-    </select>
+<select id="platform">
+  <option>YouTube Shorts</option>
+  <option>TikTok</option>
+  <option>YouTube</option>
+</select>
 
-    <select id="tone">
-      <option>Viral</option>
-      <option>Dark</option>
-      <option>Suspense</option>
-      <option>Emotional</option>
-      <option>Funny</option>
-      <option>Serious</option>
-    </select>
+<button onclick="generateHooks()">
+Generate 5 Hooks
+</button>
 
-    <button onclick="generateHooks()">
-      Generate 5 Hooks
-    </button>
+</div>
 
-  </div>
+<div class="hooks-grid" id="hooksGrid"></div>
 
-  <div class="hooks-grid" id="hooksGrid"></div>
+<div class="section">
 
-  <div class="saved-section">
-    <h2 class="section-title">⭐ Saved Hooks</h2>
-    <div id="savedHooks"></div>
-  </div>
+<h2 class="section-title">⭐ Saved Hooks</h2>
 
-  <div class="history-section">
-    <h2 class="section-title">🕘 History</h2>
-    <div id="history"></div>
-  </div>
+<div id="savedHooks"></div>
+
+</div>
+
+<div class="section">
+
+<h2 class="section-title">🕘 Hook History</h2>
+
+<div id="history"></div>
+
+</div>
 
 </div>
 
 <script>
 
-const intros = [
-  "Nobody expected",
-  "Scientists discovered",
-  "This mistake changed",
-  "The camera captured",
-  "Everything changed after",
-  "People were terrified when",
-  "No one can explain",
-  "This secret remained hidden until"
-];
+const hookData = {
 
-const subjects = [
-  "a mysterious signal",
-  "an ancient experiment",
-  "a terrifying discovery",
-  "a strange creature",
-  "a hidden truth",
-  "a forgotten document",
-  "a dangerous mistake",
-  "an impossible event"
-];
+  Horror:{
+    hooks:[
+      "Nobody survived this experiment...",
+      "The camera captured something terrifying...",
+      "This creature should not exist...",
+      "They opened the wrong door...",
+      "This video was never meant to be seen..."
+    ]
+  },
 
-const endings = [
-  "what happened next...",
-  "caught on camera.",
-  "that shocked the world.",
-  "hidden for years.",
-  "that scientists still fear.",
-  "that changed history forever.",
-  "nobody believed was real."
-];
+  Science:{
+    hooks:[
+      "Scientists discovered something impossible...",
+      "This experiment changed physics forever...",
+      "NASA found something terrifying in space...",
+      "This machine should not exist...",
+      "The results shocked the entire world..."
+    ]
+  },
+
+  Finance:{
+    hooks:[
+      "He became rich overnight...",
+      "This business made millions...",
+      "The money secret nobody tells you...",
+      "This investment changed his life...",
+      "They became millionaires in one year..."
+    ]
+  }
+
+};
 
 function randomItem(arr){
   return arr[Math.floor(Math.random() * arr.length)];
@@ -195,45 +192,49 @@ function randomItem(arr){
 
 function generateHooks(){
 
-  const hooksGrid = document.getElementById("hooksGrid");
+  const genre =
+  document.getElementById("genre").value;
 
-  hooksGrid.innerHTML = "";
+  const data =
+  hookData[genre];
+
+  const grid =
+  document.getElementById("hooksGrid");
+
+  grid.innerHTML = "";
 
   let generatedHooks = [];
 
-  for(let i=0; i<5; i++){
+  for(let i=0;i<5;i++){
 
-    let hook = `
-${randomItem(intros)} 
-${randomItem(subjects)} 
-${randomItem(endings)}
-`;
+    const hook =
+    randomItem(data.hooks);
 
     generatedHooks.push(hook);
 
-    hooksGrid.innerHTML += `
+    grid.innerHTML += `
 
-      <div class="hook-card">
+    <div class="hook-card">
 
-        <div class="hook-text">
-          ${hook}
-        </div>
+      <div class="hook-text">
+        ${hook}
+      </div>
 
-        <div class="card-buttons">
+      <div class="card-buttons">
 
-          <button class="small-btn"
-            onclick='copyHook(${JSON.stringify(hook)})'>
-            Copy
-          </button>
+        <button class="small-btn"
+        onclick='copyHook(${JSON.stringify(hook)})'>
+        Copy
+        </button>
 
-          <button class="small-btn"
-            onclick='saveHook(${JSON.stringify(hook)})'>
-            Save
-          </button>
-
-        </div>
+        <button class="small-btn"
+        onclick='saveHook(${JSON.stringify(hook)})'>
+        Save
+        </button>
 
       </div>
+
+    </div>
 
     `;
   }
@@ -242,8 +243,10 @@ ${randomItem(endings)}
 }
 
 function copyHook(text){
+
   navigator.clipboard.writeText(text);
-  alert("Copied!");
+
+  alert("Hook copied!");
 }
 
 function saveHook(hook){
@@ -284,17 +287,15 @@ function loadSavedHooks(){
 function saveHistory(hooks){
 
   let history =
-  JSON.parse(localStorage.getItem("hooksHistory")) || [];
+  JSON.parse(localStorage.getItem("hookHistory")) || [];
 
-  let item = {
+  history.unshift({
     date:new Date().toLocaleString(),
     hooks:hooks
-  };
-
-  history.unshift(item);
+  });
 
   localStorage.setItem(
-    "hooksHistory",
+    "hookHistory",
     JSON.stringify(history)
   );
 
@@ -304,7 +305,7 @@ function saveHistory(hooks){
 function loadHistory(){
 
   let history =
-  JSON.parse(localStorage.getItem("hooksHistory")) || [];
+  JSON.parse(localStorage.getItem("hookHistory")) || [];
 
   const container =
   document.getElementById("history");
@@ -313,7 +314,8 @@ function loadHistory(){
 
   history.slice(0,10).forEach(item => {
 
-    let hooksHTML = item.hooks.map(h =>
+    let hooksHTML =
+    item.hooks.map(h =>
       `<li>${h}</li>`
     ).join("");
 
