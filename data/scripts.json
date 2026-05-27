@@ -1,46 +1,13 @@
 {
-  "scriptLayouts": [
-    {
-      "layoutName": "وثائقي غموض طويل",
-      "estimatedDuration": "15+ min",
-      "structure": [
-        {
-          "phase": "Hook",
-          "timeframe": "00:00 - 01:00",
-          "cue": "[صوت غامض وموسيقى تشويقية شديدة] هل يمكن لمكان واحد على الأرض أن يخفي سراً مرعباً؟"
-        },
-        {
-          "phase": "Body/Investigation",
-          "timeframe": "01:00 - 12:00",
-          "cue": "[انتقال بصري - أرشيف قديم] بدأت الحكاية عندما تم العثور على وثائق سرية تكشف..."
-        },
-        {
-          "phase": "Outro",
-          "timeframe": "12:00 - 15:00",
-          "cue": "[موسيقى النهاية هادئة] في النهاية، يبقى هذا الملف واحداً من أكبر الألغاز. ما هو رأيكم؟"
-        }
-      ]
-    },
-    {
-      "layoutName": "تجارب علمية وشرح ظواهر",
-      "estimatedDuration": "10-15 min",
-      "structure": [
-        {
-          "phase": "Visual Hook",
-          "timeframe": "00:00 - 00:30",
-          "cue": "[لقطة مقربة مذهلة] ما تراه الآن يبدو سحراً، لكنه في الحقيقة يكسر قوانين الفيزياء العادية..."
-        },
-        {
-          "phase": "Experiment & Analysis",
-          "timeframe": "00:30 - 09:00",
-          "cue": "[شرح خطوة بخطوة] لنقم بالتجربة معاً برؤية سينمائية واضحة لتفكيك هذه الظاهرة..."
-        },
-        {
-          "phase": "Conclusion",
-          "timeframe": "09:00 - 10:00",
-          "cue": "[دعوة للاشتراك] العلم مليء بالمفاجآت، اترك لي تجربتك المفضلة في التعليقات!"
-        }
-      ]
-    }
+  "Horror": [
+    "A group entered a haunted tunnel and never returned."
+  ],
+  
+  "Science": [
+    "Scientists created a machine capable of changing reality."
+  ],
+  
+  "Finance": [
+    "A young entrepreneur built a million-dollar business."
   ]
 }

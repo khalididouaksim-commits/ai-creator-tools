@@ -1,5 +1,3 @@
-<!-- generators/hook-generator.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,106 +7,12 @@
 <title>Hook Generator</title>
 
 <link rel="stylesheet" href="../style.css">
-
-<style>
-
-body{
-  background:#050816;
-  color:white;
-  font-family:Arial;
-  padding:20px;
-}
-
-.container{
-  max-width:1000px;
-  margin:auto;
-}
-
-h1{
-  text-align:center;
-  margin-bottom:30px;
-}
-
-.controls{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-select,button{
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:#111827;
-  color:white;
-  font-size:16px;
-}
-
-button{
-  cursor:pointer;
-  background:linear-gradient(90deg,#7c3aed,#06b6d4);
-  font-weight:bold;
-}
-
-.hooks-grid{
-  display:grid;
-  gap:20px;
-  margin-top:35px;
-}
-
-.hook-card{
-  background:#111827;
-  border:1px solid #1f2937;
-  border-radius:18px;
-  padding:20px;
-}
-
-.hook-text{
-  line-height:1.8;
-  font-size:20px;
-  margin-bottom:15px;
-}
-
-.card-buttons{
-  display:flex;
-  gap:10px;
-}
-
-.small-btn{
-  flex:1;
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  background:#1f2937;
-  color:white;
-}
-
-.section{
-  margin-top:50px;
-}
-
-.section-title{
-  margin-bottom:20px;
-  font-size:24px;
-}
-
-.mini-card{
-  background:#0f172a;
-  border:1px solid #1e293b;
-  padding:15px;
-  border-radius:14px;
-  margin-bottom:12px;
-}
-
-</style>
-
 </head>
 <body>
 
-<div class="container">
+<div class="container generator-container">
 
-<h1>🎣 AI Hook Generator</h1>
+<h1 class="page-title">🎣 Hook Generator</h1>
 
 <div class="controls">
 
@@ -118,35 +22,13 @@ button{
   <option>Finance</option>
 </select>
 
-<select id="platform">
-  <option>YouTube Shorts</option>
-  <option>TikTok</option>
-  <option>YouTube</option>
-</select>
-
 <button onclick="generateHooks()">
-Generate 5 Hooks
+Generate Hooks
 </button>
 
 </div>
 
-<div class="hooks-grid" id="hooksGrid"></div>
-
-<div class="section">
-
-<h2 class="section-title">⭐ Saved Hooks</h2>
-
-<div id="savedHooks"></div>
-
-</div>
-
-<div class="section">
-
-<h2 class="section-title">🕘 Hook History</h2>
-
-<div id="history"></div>
-
-</div>
+<div class="results-grid" id="results"></div>
 
 </div>
 
@@ -154,35 +36,23 @@ Generate 5 Hooks
 
 const hookData = {
 
-  Horror:{
-    hooks:[
-      "Nobody survived this experiment...",
-      "The camera captured something terrifying...",
-      "This creature should not exist...",
-      "They opened the wrong door...",
-      "This video was never meant to be seen..."
-    ]
-  },
+  Horror:[
+    "Nobody survived this experiment...",
+    "The camera captured something terrifying...",
+    "This creature should not exist..."
+  ],
 
-  Science:{
-    hooks:[
-      "Scientists discovered something impossible...",
-      "This experiment changed physics forever...",
-      "NASA found something terrifying in space...",
-      "This machine should not exist...",
-      "The results shocked the entire world..."
-    ]
-  },
+  Science:[
+    "Scientists discovered something impossible...",
+    "This experiment changed physics forever...",
+    "NASA found something terrifying in space..."
+  ],
 
-  Finance:{
-    hooks:[
-      "He became rich overnight...",
-      "This business made millions...",
-      "The money secret nobody tells you...",
-      "This investment changed his life...",
-      "They became millionaires in one year..."
-    ]
-  }
+  Finance:[
+    "He became rich overnight...",
+    "This business made millions...",
+    "The money secret nobody tells you..."
+  ]
 
 };
 
@@ -198,38 +68,29 @@ function generateHooks(){
   const data =
   hookData[genre];
 
-  const grid =
-  document.getElementById("hooksGrid");
+  const results =
+  document.getElementById("results");
 
-  grid.innerHTML = "";
-
-  let generatedHooks = [];
+  results.innerHTML = "";
 
   for(let i=0;i<5;i++){
 
     const hook =
-    randomItem(data.hooks);
+    randomItem(data);
 
-    generatedHooks.push(hook);
+    results.innerHTML += `
 
-    grid.innerHTML += `
+    <div class="result-card">
 
-    <div class="hook-card">
-
-      <div class="hook-text">
+      <div class="result-title">
         ${hook}
       </div>
 
       <div class="card-buttons">
 
         <button class="small-btn"
-        onclick='copyHook(${JSON.stringify(hook)})'>
+        onclick="navigator.clipboard.writeText('${hook}')">
         Copy
-        </button>
-
-        <button class="small-btn"
-        onclick='saveHook(${JSON.stringify(hook)})'>
-        Save
         </button>
 
       </div>
@@ -238,103 +99,7 @@ function generateHooks(){
 
     `;
   }
-
-  saveHistory(generatedHooks);
 }
-
-function copyHook(text){
-
-  navigator.clipboard.writeText(text);
-
-  alert("Hook copied!");
-}
-
-function saveHook(hook){
-
-  let saved =
-  JSON.parse(localStorage.getItem("savedHooks")) || [];
-
-  saved.push(hook);
-
-  localStorage.setItem(
-    "savedHooks",
-    JSON.stringify(saved)
-  );
-
-  loadSavedHooks();
-}
-
-function loadSavedHooks(){
-
-  let saved =
-  JSON.parse(localStorage.getItem("savedHooks")) || [];
-
-  const container =
-  document.getElementById("savedHooks");
-
-  container.innerHTML = "";
-
-  saved.forEach(hook => {
-
-    container.innerHTML += `
-      <div class="mini-card">
-        ${hook}
-      </div>
-    `;
-  });
-}
-
-function saveHistory(hooks){
-
-  let history =
-  JSON.parse(localStorage.getItem("hookHistory")) || [];
-
-  history.unshift({
-    date:new Date().toLocaleString(),
-    hooks:hooks
-  });
-
-  localStorage.setItem(
-    "hookHistory",
-    JSON.stringify(history)
-  );
-
-  loadHistory();
-}
-
-function loadHistory(){
-
-  let history =
-  JSON.parse(localStorage.getItem("hookHistory")) || [];
-
-  const container =
-  document.getElementById("history");
-
-  container.innerHTML = "";
-
-  history.slice(0,10).forEach(item => {
-
-    let hooksHTML =
-    item.hooks.map(h =>
-      `<li>${h}</li>`
-    ).join("");
-
-    container.innerHTML += `
-      <div class="mini-card">
-
-        <strong>${item.date}</strong>
-
-        <ul style="margin-top:10px">
-          ${hooksHTML}
-        </ul>
-
-      </div>
-    `;
-  });
-}
-
-loadSavedHooks();
-loadHistory();
 
 </script>
 

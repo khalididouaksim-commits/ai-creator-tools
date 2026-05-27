@@ -1,20 +1,16 @@
 {
-  "viralHooks": [
-    {
-      "category": "shock",
-      "hookText": "كل ما أخبروك به عن [keyword] هو كذبة تم التخطيط لها بدقة.. الحقيقة المرعبة بدأت عندما..."
-    },
-    {
-      "category": "mystery",
-      "hookText": "هل تساءلت يوماً لماذا تم إغلاق ملف [keyword] بشكل مفاجئ ومنع أي شخص من الاقتراب منه؟ السر يكمن هنا.."
-    },
-    {
-      "category": "storytelling",
-      "hookText": "في تمام الساعة الثالثة صباحاً، كان كل شيء يسير بشكل طبيعي، حتى ظهر [keyword] وتسبب في حدث غيّر التاريخ كلياً.."
-    },
-    {
-      "category": "scientific",
-      "hookText": "علماء كسروا القوانين الفيزيائية لتجربة [keyword].. والنتيجة كانت صدمة لم يتوقعها أحد!"
-    }
+  "Horror": [
+    "Nobody survived this experiment...",
+    "The camera captured something terrifying..."
+  ],
+  
+  "Science": [
+    "Scientists discovered something impossible...",
+    "NASA found something terrifying in space..."
+  ],
+  
+  "Finance": [
+    "He became rich overnight...",
+    "This business made millions..."
   ]
 }

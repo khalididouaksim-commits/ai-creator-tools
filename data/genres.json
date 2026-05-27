@@ -1,19 +1,10 @@
-{
-  "genres": [
-    {
-      "id": "mystery",
-      "name": "غموض وألغاز تاريخية",
-      "defaultKeywords": ["ممر دياتلوف", "ريتشارد بيرد", "المنطقة 51", "مثلث برمودا"]
-    },
-    {
-      "id": "science",
-      "name": "تجارب علمية مذهلة",
-      "defaultKeywords": ["الكهرباء الساكنة", "انكسار الضوء", "الانصهار البارد"]
-    },
-    {
-      "id": "geology",
-      "name": "جيولوجيا وظواهر طبيعية",
-      "defaultKeywords": ["التآكل الصخري", "الحفر العملاقة", "شلالات الدم"]
-    }
-  ]
-}
+[
+  "Horror",
+  "Science",
+  "Finance",
+  "Mystery",
+  "History",
+  "Technology",
+  "Space",
+  "Crime"
+]

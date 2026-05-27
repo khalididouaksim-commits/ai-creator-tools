@@ -1,226 +1,57 @@
-<!-- generators/script-generator.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AI Script Generator</title>
+<title>Script Generator</title>
 
 <link rel="stylesheet" href="../style.css">
-
-<style>
-
-body{
-  background:#050816;
-  color:white;
-  font-family:Arial;
-  padding:20px;
-}
-
-.container{
-  max-width:1100px;
-  margin:auto;
-}
-
-h1{
-  text-align:center;
-  margin-bottom:30px;
-}
-
-.controls{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-select,button{
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:#111827;
-  color:white;
-  font-size:16px;
-}
-
-button{
-  cursor:pointer;
-  background:linear-gradient(90deg,#7c3aed,#06b6d4);
-  font-weight:bold;
-}
-
-.scripts-grid{
-  display:grid;
-  gap:20px;
-  margin-top:35px;
-}
-
-.script-card{
-  background:#111827;
-  border:1px solid #1f2937;
-  border-radius:18px;
-  padding:20px;
-}
-
-.script-title{
-  font-size:20px;
-  margin-bottom:20px;
-  color:#06b6d4;
-}
-
-.scene{
-  margin-bottom:15px;
-  background:#0f172a;
-  padding:14px;
-  border-radius:12px;
-  border:1px solid #1e293b;
-}
-
-.scene strong{
-  display:block;
-  margin-bottom:8px;
-  color:#8b5cf6;
-}
-
-.card-buttons{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
-
-.small-btn{
-  flex:1;
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  background:#1f2937;
-  color:white;
-}
-
-.section{
-  margin-top:50px;
-}
-
-.section-title{
-  margin-bottom:20px;
-  font-size:24px;
-}
-
-.mini-card{
-  background:#0f172a;
-  border:1px solid #1e293b;
-  padding:15px;
-  border-radius:14px;
-  margin-bottom:12px;
-}
-
-</style>
-
 </head>
 <body>
 
-<div class="container">
+<div class="container generator-container">
 
-<h1>🎬 AI Script Generator</h1>
+<h1 class="page-title">🎬 Script Generator</h1>
 
 <div class="controls">
 
-<select id="platform">
-  <option>YouTube Shorts</option>
-  <option>TikTok</option>
-  <option>Documentary</option>
-  <option>Long YouTube Video</option>
-</select>
-
 <select id="genre">
-  <option>Mystery</option>
-  <option>Science</option>
-  <option>History</option>
   <option>Horror</option>
+  <option>Science</option>
   <option>Finance</option>
-  <option>Motivation</option>
-</select>
-
-<select id="tone">
-  <option>Suspense</option>
-  <option>Emotional</option>
-  <option>Dark</option>
-  <option>Funny</option>
-  <option>Serious</option>
-</select>
-
-<select id="duration">
-  <option>30 Seconds</option>
-  <option>1 Minute</option>
-  <option>3 Minutes</option>
-  <option>10 Minutes</option>
 </select>
 
 <button onclick="generateScripts()">
-Generate 3 Scripts
+Generate Scripts
 </button>
 
 </div>
 
-<div class="scripts-grid" id="scriptsGrid"></div>
-
-<div class="section">
-
-<h2 class="section-title">⭐ Saved Scripts</h2>
-
-<div id="savedScripts"></div>
-
-</div>
-
-<div class="section">
-
-<h2 class="section-title">🕘 Script History</h2>
-
-<div id="history"></div>
-
-</div>
+<div class="results-grid" id="results"></div>
 
 </div>
 
 <script>
 
-const hooks = [
-  "Nobody expected what investigators found...",
-  "Scientists still cannot explain this event...",
-  "This hidden discovery shocked the world...",
-  "One mistake changed history forever...",
-  "The camera captured something terrifying..."
-];
+const scriptData = {
 
-const intros = [
-  "It all started on a cold mysterious night.",
-  "Everything seemed normal at first.",
-  "For years, nobody talked about this story.",
-  "At first, people thought it was impossible."
-];
+  Horror:[
+    "A group entered a haunted tunnel and never returned.",
+    "The camera captured a terrifying creature underground."
+  ],
 
-const buildups = [
-  "As the investigation continued, strange details appeared.",
-  "Witnesses began reporting terrifying experiences.",
-  "The deeper they explored, the darker the truth became.",
-  "Nobody was prepared for what happened next."
-];
+  Science:[
+    "Scientists created a machine capable of changing reality.",
+    "NASA discovered a strange signal from deep space."
+  ],
 
-const twists = [
-  "But the truth was completely different.",
-  "Then investigators discovered a hidden document.",
-  "What happened next terrified everyone involved.",
-  "The final recording changed everything."
-];
+  Finance:[
+    "A young entrepreneur built a million-dollar business.",
+    "This investment strategy changed his life forever."
+  ]
 
-const endings = [
-  "Until today, nobody knows the full truth.",
-  "Some people believe the mystery still continues.",
-  "The case remains unsolved after all these years.",
-  "And this is why the story became legendary."
-];
+};
 
 function randomItem(arr){
   return arr[Math.floor(Math.random() * arr.length)];
@@ -228,206 +59,35 @@ function randomItem(arr){
 
 function generateScripts(){
 
-  const platform =
-  document.getElementById("platform").value;
-
   const genre =
   document.getElementById("genre").value;
 
-  const tone =
-  document.getElementById("tone").value;
+  const data =
+  scriptData[genre];
 
-  const duration =
-  document.getElementById("duration").value;
+  const results =
+  document.getElementById("results");
 
-  const grid =
-  document.getElementById("scriptsGrid");
-
-  grid.innerHTML = "";
-
-  let generatedScripts = [];
+  results.innerHTML = "";
 
   for(let i=0;i<3;i++){
 
-    const hook = randomItem(hooks);
-    const intro = randomItem(intros);
-    const buildup = randomItem(buildups);
-    const twist = randomItem(twists);
-    const ending = randomItem(endings);
+    const script =
+    randomItem(data);
 
-    const fullScript = `
-HOOK:
-${hook}
+    results.innerHTML += `
 
-INTRO:
-${intro}
+    <div class="result-card">
 
-BUILD-UP:
-${buildup}
-
-TWIST:
-${twist}
-
-ENDING:
-${ending}
-`;
-
-    generatedScripts.push(fullScript);
-
-    grid.innerHTML += `
-
-    <div class="script-card">
-
-      <div class="script-title">
-        ${genre} • ${tone} • ${duration}
-      </div>
-
-      <div class="scene">
-        <strong>🎣 Hook</strong>
-        ${hook}
-      </div>
-
-      <div class="scene">
-        <strong>📖 Intro</strong>
-        ${intro}
-      </div>
-
-      <div class="scene">
-        <strong>📈 Build-up</strong>
-        ${buildup}
-      </div>
-
-      <div class="scene">
-        <strong>⚠️ Twist</strong>
-        ${twist}
-      </div>
-
-      <div class="scene">
-        <strong>🎬 Ending</strong>
-        ${ending}
-      </div>
-
-      <div class="scene">
-        <strong>🎤 Voice Style</strong>
-        Deep cinematic narration voice
-      </div>
-
-      <div class="card-buttons">
-
-        <button class="small-btn"
-        onclick='copyScript(${JSON.stringify(fullScript)})'>
-        Copy
-        </button>
-
-        <button class="small-btn"
-        onclick='saveScript(${JSON.stringify(fullScript)})'>
-        Save
-        </button>
-
+      <div class="result-box">
+        ${script}
       </div>
 
     </div>
 
     `;
   }
-
-  saveHistory(generatedScripts);
 }
-
-function copyScript(text){
-
-  navigator.clipboard.writeText(text);
-
-  alert("Script copied!");
-}
-
-function saveScript(script){
-
-  let saved =
-  JSON.parse(localStorage.getItem("savedScripts")) || [];
-
-  saved.push(script);
-
-  localStorage.setItem(
-    "savedScripts",
-    JSON.stringify(saved)
-  );
-
-  loadSavedScripts();
-}
-
-function loadSavedScripts(){
-
-  let saved =
-  JSON.parse(localStorage.getItem("savedScripts")) || [];
-
-  const container =
-  document.getElementById("savedScripts");
-
-  container.innerHTML = "";
-
-  saved.forEach(script => {
-
-    container.innerHTML += `
-      <div class="mini-card">
-        <pre style="white-space:pre-wrap;color:white">${script}</pre>
-      </div>
-    `;
-  });
-}
-
-function saveHistory(scripts){
-
-  let history =
-  JSON.parse(localStorage.getItem("scriptHistory")) || [];
-
-  history.unshift({
-    date:new Date().toLocaleString(),
-    scripts:scripts
-  });
-
-  localStorage.setItem(
-    "scriptHistory",
-    JSON.stringify(history)
-  );
-
-  loadHistory();
-}
-
-function loadHistory(){
-
-  let history =
-  JSON.parse(localStorage.getItem("scriptHistory")) || [];
-
-  const container =
-  document.getElementById("history");
-
-  container.innerHTML = "";
-
-  history.slice(0,10).forEach(item => {
-
-    let html = item.scripts.map(script => `
-      <pre style="white-space:pre-wrap;color:white">
-${script}
-      </pre>
-    `).join("");
-
-    container.innerHTML += `
-      <div class="mini-card">
-
-        <strong>${item.date}</strong>
-
-        <div style="margin-top:10px">
-          ${html}
-        </div>
-
-      </div>
-    `;
-  });
-}
-
-loadSavedScripts();
-loadHistory();
 
 </script>
 

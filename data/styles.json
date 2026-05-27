@@ -1,29 +1,10 @@
-{
-  "visualStyles": [
-    {
-      "id": "cinematic",
-      "name": "سينمائي واقعي (Cinematic)",
-      "tags": "cinematic movie scene, 8k resolution, photorealistic, anamorphic lens flares, dramatic lighting, highly detailed"
-    },
-    {
-      "id": "dark-moody",
-      "name": "غموض وتشويق داكن (Dark Moody)",
-      "tags": "dark moody atmosphere, mystery thriller style, heavy shadows, cinematic fog, volumetric lighting, eerie ambient"
-    },
-    {
-      "id": "vintage-archive",
-      "name": "أرشيف وثائقي قديم (Vintage Archive)",
-      "tags": "historical documentary archive style, 1950s grainy film texture, vintage look, faded colors, old VHS effect"
-    },
-    {
-      "id": "3d-render",
-      "name": "أنيميشن ثلاثي الأبعاد (3D Render)",
-      "tags": "3D animation style, highly detailed, unreal engine 5 render, vibrant colors, smooth textures"
-    },
-    {
-      "id": "cosmic-horror",
-      "name": "رعب كوني وفضاء (Cosmic Horror)",
-      "tags": "cosmic horror style, lovecraftian atmosphere, deep space nebulas, glowing neon alien runes, overwhelming scale"
-    }
-  ]
-}
+[
+  "Cinematic",
+  "Realistic",
+  "Dark",
+  "Anime",
+  "Documentary",
+  "Sci-Fi",
+  "Viral",
+  "Ultra Realistic"
+]

@@ -1,22 +1,16 @@
 {
-  "promptBases": [
-    {
-      "engine": "veo3",
-      "type": "video",
-      "parameters": "--ar 16:9 --v 3.0 --motion smooth",
-      "prefix": "Cinematic video shot, realistic movement, highly detailed,"
-    },
-    {
-      "engine": "midjourney",
-      "type": "image",
-      "parameters": "--ar 16:9 --v 6.0 --style raw",
-      "prefix": "Photorealistic depth of field, 8k resolution, cinematic lighting,"
-    },
-    {
-      "engine": "flux",
-      "type": "image",
-      "parameters": "--aspect 16:9 --quality high",
-      "prefix": "Hyper-realistic rendering, extreme texture details, masterpiece,"
-    }
+  "Horror": [
+    "haunted hospital cinematic scene",
+    "terrifying forest at night"
+  ],
+  
+  "Science": [
+    "futuristic laboratory",
+    "advanced AI robot"
+  ],
+  
+  "Finance": [
+    "luxury office with businessman",
+    "stock market cinematic shot"
   ]
 }
