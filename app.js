@@ -1,10 +1,14 @@
 const app = document.getElementById("app");
 
+/* ===================== */
+/* ROUTER */
+/* ===================== */
+
 function loadTool(tool) {
   
   if (tool === "home") {
     app.innerHTML = `
-      <h1>AI Studio</h1>
+      <h1>Welcome to AI Studio</h1>
       <p>Select a tool from sidebar</p>
     `;
   }
@@ -32,7 +36,7 @@ function loadTool(tool) {
     app.innerHTML = `
       <h1>Hook Generator</h1>
 
-      <textarea id="desc" placeholder="Idea"></textarea>
+      <textarea id="desc" placeholder="Write idea"></textarea>
 
       <button onclick="generateHook()">Generate</button>
 
@@ -42,39 +46,51 @@ function loadTool(tool) {
   
   if (tool === "thumbnail") {
     app.innerHTML = `
-      <h1>Thumbnail Ideas</h1>
-      <textarea placeholder="Video topic"></textarea>
-      <button>Generate</button>
+      <h1>Thumbnail Generator</h1>
+
+      <textarea id="desc" placeholder="Video topic"></textarea>
+
+      <button onclick="generateThumbnail()">Generate</button>
+
+      <pre id="result"></pre>
     `;
   }
 }
 
-/* GENERATORS */
+/* ===================== */
+/* SCRIPT */
+/* ===================== */
 
 function generateScript() {
+  
   const cat = document.getElementById("category").value;
   const desc = document.getElementById("desc").value;
   
-  const data = {
-    Horror: "Something terrifying happened...",
-    Mystery: "Nobody understood what was going on...",
-    History: "In the past, a hidden story appeared..."
+  const base = {
+    Horror: "Something terrifying happened in the dark...",
+    Mystery: "Nobody could explain what happened...",
+    History: "A forgotten story from the past..."
   };
   
   document.getElementById("result").innerText =
-    `${data[cat]}
+    `${base[cat]}
 
 Idea:
 ${desc}`;
 }
 
+/* ===================== */
+/* HOOK */
+/* ===================== */
+
 function generateHook() {
+  
   const desc = document.getElementById("desc").value;
   
   const hooks = [
-    "You won't believe this...",
-    "Nobody expected this...",
-    "This changed everything..."
+    "You won't believe what happened...",
+    "This will shock you...",
+    "Nobody expected this..."
   ];
   
   const random = hooks[Math.floor(Math.random() * hooks.length)];
@@ -85,5 +101,21 @@ function generateHook() {
 ${desc}`;
 }
 
-/* START */
+/* ===================== */
+/* THUMBNAIL */
+/* ===================== */
+
+function generateThumbnail() {
+  
+  const desc = document.getElementById("desc").value;
+  
+  document.getElementById("result").innerText =
+    `Thumbnail Idea:
+
+🔥 Bold text: "${desc}"
+🎯 Focus object: Main subject
+🎨 Style: Dark / Neon / Cinematic`;
+}
+
+/* INIT */
 loadTool("home");
