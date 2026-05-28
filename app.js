@@ -1,3 +1,4 @@
+alert("JS IS LOADED");
 const app = document.getElementById("app");
 
 /* ===================== */
