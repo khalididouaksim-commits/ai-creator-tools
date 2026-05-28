@@ -1,83 +1,80 @@
 const app = document.getElementById("app");
 
-/* HOME */
-function showHome() {
-  app.innerHTML = `
-    <h1>Welcome to AI Studio</h1>
-    <p>Select a tool from sidebar</p>
-  `;
-}
-
-/* SCRIPT TOOL */
-function showScript() {
-  app.innerHTML = `
-    <h1>Script Generator</h1>
-
-    <select id="category">
-      <option>Horror</option>
-      <option>History</option>
-      <option>Mystery</option>
-      <option>Other</option>
-    </select>
-
-    <textarea id="desc" placeholder="Write your idea..."></textarea>
-
-    <button onclick="generateScript()">Generate</button>
-
-    <pre id="result"></pre>
-  `;
-}
-
-/* HOOK TOOL */
-function showHook() {
-  app.innerHTML = `
-    <h1>Hook Generator</h1>
-
-    <textarea id="desc" placeholder="Video idea..."></textarea>
-
-    <button onclick="generateHook()">Generate</button>
-
-    <pre id="result"></pre>
-  `;
-}
-
-/* ROUTER */
 function loadTool(tool) {
   
-  if (tool === "home") showHome();
-  if (tool === "script") showScript();
-  if (tool === "hook") showHook();
-  if (tool === "thumbnail") showHome(); // مؤقت
+  if (tool === "home") {
+    app.innerHTML = `
+      <h1>AI Studio</h1>
+      <p>Select a tool from sidebar</p>
+    `;
+  }
+  
+  if (tool === "script") {
+    app.innerHTML = `
+      <h1>Script Generator</h1>
+
+      <select id="category">
+        <option>Horror</option>
+        <option>Mystery</option>
+        <option>History</option>
+        <option>Other</option>
+      </select>
+
+      <textarea id="desc" placeholder="Write your idea"></textarea>
+
+      <button onclick="generateScript()">Generate</button>
+
+      <pre id="result"></pre>
+    `;
+  }
+  
+  if (tool === "hook") {
+    app.innerHTML = `
+      <h1>Hook Generator</h1>
+
+      <textarea id="desc" placeholder="Idea"></textarea>
+
+      <button onclick="generateHook()">Generate</button>
+
+      <pre id="result"></pre>
+    `;
+  }
+  
+  if (tool === "thumbnail") {
+    app.innerHTML = `
+      <h1>Thumbnail Ideas</h1>
+      <textarea placeholder="Video topic"></textarea>
+      <button>Generate</button>
+    `;
+  }
 }
 
-/* SCRIPT GENERATION */
+/* GENERATORS */
+
 function generateScript() {
-  
   const cat = document.getElementById("category").value;
   const desc = document.getElementById("desc").value;
   
-  const base = {
-    Horror: "Something dark happened...",
-    Mystery: "Nobody understood what happened...",
-    History: "In the past, a hidden story..."
+  const data = {
+    Horror: "Something terrifying happened...",
+    Mystery: "Nobody understood what was going on...",
+    History: "In the past, a hidden story appeared..."
   };
   
   document.getElementById("result").innerText =
-    `${base[cat]}
+    `${data[cat]}
 
 Idea:
 ${desc}`;
 }
 
-/* HOOK GENERATION */
 function generateHook() {
-  
   const desc = document.getElementById("desc").value;
   
   const hooks = [
-    "You won't believe what happened...",
-    "This changed everything...",
-    "Nobody expected this..."
+    "You won't believe this...",
+    "Nobody expected this...",
+    "This changed everything..."
   ];
   
   const random = hooks[Math.floor(Math.random() * hooks.length)];
@@ -88,5 +85,5 @@ function generateHook() {
 ${desc}`;
 }
 
-/* INIT */
-showHome();
+/* START */
+loadTool("home");
