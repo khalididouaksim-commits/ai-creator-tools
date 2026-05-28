@@ -1,61 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>AI Creator Studio</title>
-
+  <title>AI Studio</title>
   <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
 
-<div class="container">
+  <div class="sidebar">
+    <h2>AI Studio</h2>
 
-  <header class="hero">
+    <button onclick="loadTool('home')">Home</button>
+    <button onclick="loadTool('script')">Script</button>
+    <button onclick="loadTool('hook')">Hook</button>
+    <button onclick="loadTool('thumbnail')">Thumbnail</button>
+  </div>
 
-    <h1>🚀 AI Creator Studio</h1>
+  <div class="main" id="app">
+    <!-- content here -->
+  </div>
 
-    <p>
-      Generate Hooks, Scripts, Titles, Prompts & Thumbnail Ideas
-    </p>
-
-  </header>
-
-  <section class="tools-grid">
-
-    <a href="generators/hook-generator.html" class="tool-card">
-      <h2>🎣 Hook Generator</h2>
-      <p>Create viral hooks for Shorts & TikTok</p>
-    </a>
-
-    <a href="generators/prompt-generator.html" class="tool-card">
-      <h2>✨ Prompt Generator</h2>
-      <p>Create AI image & video prompts</p>
-    </a>
-
-    <a href="generators/script-generator.html" class="tool-card">
-      <h2>🎬 Script Generator</h2>
-      <p>Create cinematic AI scripts</p>
-    </a>
-
-    <a href="generators/thumbnail-generator.html" class="tool-card">
-      <h2>🖼️ Thumbnail Generator</h2>
-      <p>Generate thumbnail ideas & prompts</p>
-    </a>
-
-    <a href="generators/title-generator.html" class="tool-card">
-      <h2>🏷️ Title Generator</h2>
-      <p>Create viral clickable titles</p>
-    </a>
-
-  </section>
-
-</div>
-
-<script src="app.js"></script>
-
+  <script src="app.js"></script>
 </body>
 </html>
