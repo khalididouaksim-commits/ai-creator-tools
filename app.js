@@ -32,8 +32,12 @@ window.loadTool = function(tool) {
     ></textarea>
 
     <button onclick="generateScript()">
-      Generate
-    </button>
+  Generate
+</button>
+
+<
+button onclick = "generateScript()" > 🔄Regenerate <
+  /button>
 
     <pre id="result"></pre>
   `;
