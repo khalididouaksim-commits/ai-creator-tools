@@ -10,22 +10,34 @@ window.loadTool = function(tool) {
   }
   
   if (tool === "script") {
-    app.innerHTML = `
-      <h1>Script Generator</h1>
+  app.innerHTML = `
+    <h1>Script Generator</h1>
 
-      <select id="category">
-        <option>Horror</option>
-        <option>Mystery</option>
-        <option>History</option>
-      </select>
+    <select id="category">
+      <option>Horror</option>
+      <option>Mystery</option>
+      <option>History</option>
+      <option>Other</option>
+    </select>
 
-      <textarea id="desc"></textarea>
+    <input
+      type="text"
+      id="otherCategory"
+      placeholder="Write your category"
+    >
 
-      <button onclick="generateScript()">Generate</button>
+    <textarea
+      id="desc"
+      placeholder="Describe your video idea"
+    ></textarea>
 
-      <pre id="result"></pre>
-    `;
-  }
+    <button onclick="generateScript()">
+      Generate
+    </button>
+
+    <pre id="result"></pre>
+  `;
+}
   
   if (tool === "hook") {
     app.innerHTML = `
