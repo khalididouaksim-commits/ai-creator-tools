@@ -43,6 +43,10 @@ window.loadTool = function(tool) {
   🎭 More Dramatic
 </button>
 
+<button onclick="makeViral()">
+  ⚡ More Viral
+</button>
+
     <pre id="result"></pre>
   `;
 }
