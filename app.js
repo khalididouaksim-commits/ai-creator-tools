@@ -198,3 +198,33 @@ Nobody was prepared for what happened next.
 
 The truth would change everything forever.`;
 }
+
+window.makeViral = function(){
+
+  const result =
+    document.getElementById("result");
+
+  const text = result.innerText;
+
+  if(!text){
+    return;
+  }
+
+  const hooks = [
+    "99% of people have never heard this story...",
+    "This mystery shocked the internet...",
+    "What happened next is unbelievable...",
+    "Nobody expected this discovery..."
+  ];
+
+  const hook =
+    hooks[Math.floor(Math.random() * hooks.length)];
+
+  result.innerText =
+
+`${hook}
+
+${text}
+
+Watch until the end to discover the truth.`;
+}
