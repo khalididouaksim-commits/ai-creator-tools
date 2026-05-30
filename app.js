@@ -35,9 +35,9 @@ window.loadTool = function(tool) {
   Generate
 </button>
 
-<
-button onclick = "generateScript()" > 🔄Regenerate <
-  /button>
+<button onclick="generateScript()">
+  🔄 Regenerate
+</button>
   
 <button onclick="makeDramatic()">
   🎭 More Dramatic
