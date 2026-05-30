@@ -70,17 +70,30 @@ window.generateScript = function() {
   
   const cat = document.getElementById("category").value;
   const desc = document.getElementById("desc").value;
+  const other =
+    document.getElementById("otherCategory").value;
   
-  const base = {
-    Horror: "Something dark happened...",
-    Mystery: "Nobody understood what happened...",
-    History: "A hidden story from the past..."
-  };
+  let intro = "";
+  
+  if (cat === "Horror") {
+    intro = "At 3AM, something terrifying happened...";
+  }
+  else if (cat === "Mystery") {
+    intro = "Nobody could explain the strange event...";
+  }
+  else if (cat === "History") {
+    intro = "History tried to hide this story...";
+  }
+  else {
+    intro = `Category: ${other}`;
+  }
   
   document.getElementById("result").innerText =
-    `${base[cat]}
+    `${intro}
 
-${desc}`;
+${desc}
+
+This story will reveal secrets nobody expected.`;
 }
 
 /* =================== */
