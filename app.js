@@ -38,6 +38,10 @@ window.loadTool = function(tool) {
 <
 button onclick = "generateScript()" > 🔄Regenerate <
   /button>
+  
+<button onclick="makeDramatic()">
+  🎭 More Dramatic
+</button>
 
     <pre id="result"></pre>
   `;
@@ -168,3 +172,25 @@ ${desc}`;
 
 /* INIT */
 window.loadTool("home");
+
+window.makeDramatic = function(){
+
+  const result =
+    document.getElementById("result");
+
+  const text = result.innerText;
+
+  if(!text){
+    return;
+  }
+
+  result.innerText =
+
+`⚠️ SHOCKING DISCOVERY ⚠️
+
+${text}
+
+Nobody was prepared for what happened next.
+
+The truth would change everything forever.`;
+}
