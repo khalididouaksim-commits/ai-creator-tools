@@ -88,17 +88,47 @@ window.generateScript = function() {
     intro = `Category: ${other}`;
   }
   
-  document.getElementById("result").innerText =
+  const openings = [
+  "A mysterious event begins when",
+  "Everything changes when",
+  "The story starts after",
+  "Nobody expected what happened when"
+];
+
+const middles = [
+  "strange secrets start to appear.",
+  "unexpected events shock everyone.",
+  "the situation becomes more dangerous.",
+  "the truth slowly comes to light."
+];
+
+const endings = [
+  "Nobody knows how it will end.",
+  "The mystery remains unsolved.",
+  "What happens next changes everything.",
+  "The final discovery shocks the world."
+];
+
+const opening =
+  openings[Math.floor(Math.random() * openings.length)];
+
+const middle =
+  middles[Math.floor(Math.random() * middles.length)];
+
+const ending =
+  endings[Math.floor(Math.random() * endings.length)];
+
+document.getElementById("result").innerText =
   
   `${intro}
 
 SCRIPT:
 
-A mysterious event begins when ${desc}
+${opening} ${desc}.
 
-As the story develops, unexpected secrets start to appear.
+As the story develops, ${middle}
 
-Nobody knows how it will end.`;
+${ending}`;
 }
 
 /* =================== */
