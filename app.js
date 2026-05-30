@@ -89,11 +89,16 @@ window.generateScript = function() {
   }
   
   document.getElementById("result").innerText =
-    `${intro}
+  
+  `${intro}
 
-${desc}
+SCRIPT:
 
-This story will reveal secrets nobody expected.`;
+A mysterious event begins when ${desc}
+
+As the story develops, unexpected secrets start to appear.
+
+Nobody knows how it will end.`;
 }
 
 /* =================== */
