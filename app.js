@@ -47,6 +47,10 @@ window.loadTool = function(tool) {
   ⚡ More Viral
 </button>
 
+<button onclick="makeShorter()">
+  ✂️ Shorter
+</button>
+
     <pre id="result"></pre>
   `;
 }
@@ -227,4 +231,26 @@ window.makeViral = function(){
 ${text}
 
 Watch until the end to discover the truth.`;
+}
+
+window.makeShorter = function(){
+
+  const result =
+    document.getElementById("result");
+
+  const text = result.innerText;
+
+  if(!text){
+    return;
+  }
+
+  const lines = text.split("\n");
+
+  const shortText =
+    lines.slice(0, 5).join("\n");
+
+  result.innerText =
+`${shortText}
+
+[Short Version]`;
 }
