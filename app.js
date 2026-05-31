@@ -51,6 +51,10 @@ window.loadTool = function(tool) {
   ✂️ Shorter
 </button>
 
+<button onclick="copyResult()">
+  📋 Copy
+</button>
+
     <pre id="result"></pre>
   `;
 }
@@ -253,4 +257,18 @@ window.makeShorter = function(){
 `${shortText}
 
 [Short Version]`;
+}
+
+window.copyResult = function(){
+
+  const text =
+    document.getElementById("result").innerText;
+
+  if(!text){
+    return;
+  }
+
+  navigator.clipboard.writeText(text);
+
+  alert("Copied!");
 }
