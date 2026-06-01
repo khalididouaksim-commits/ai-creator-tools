@@ -104,7 +104,17 @@ window.loadTool = function(tool) {
 
       <textarea id="desc"></textarea>
 
-      <button onclick="generateThumbnail()">Generate</button>
+      <button onclick="generateThumbnail()">
+  Generate
+</button>
+
+<
+button onclick = "generateThumbnail()" > 🔄Regenerate <
+  /button>
+  
+  <
+  button onclick = "copyResult()" > 📋Copy <
+  /button>
 
       <pre id="result"></pre>
     `;
