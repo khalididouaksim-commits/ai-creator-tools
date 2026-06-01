@@ -109,12 +109,14 @@ window.loadTool = function(tool) {
 </button>
 
 <
-button onclick = "generateThumbnail()" > 🔄Regenerate <
-  /button>
-  
-  <
-  button onclick = "copyResult()" > 📋Copy <
-  /button>
+
+<button onclick="generateThumbnail()">
+  🔄 Regenerate
+</button>
+
+<button onclick="copyResult()">
+  📋 Copy
+</button>
 
       <pre id="result"></pre>
     `;
