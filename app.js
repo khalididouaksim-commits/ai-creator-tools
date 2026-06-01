@@ -60,16 +60,35 @@ window.loadTool = function(tool) {
 }
   
   if (tool === "hook") {
-    app.innerHTML = `
-      <h1>Hook Generator</h1>
+  app.innerHTML = `
+    <h1>Hook Generator</h1>
 
-      <textarea id="desc"></textarea>
+    <select id="hookCategory">
+      <option>Horror</option>
+      <option>Mystery</option>
+      <option>History</option>
+      <option>Facts</option>
+      <option>Other</option>
+    </select>
 
-      <button onclick="generateHook()">Generate</button>
+    <input
+      type="text"
+      id="otherHookCategory"
+      placeholder="Write your category"
+    >
 
-      <pre id="result"></pre>
-    `;
-  }
+    <textarea
+      id="desc"
+      placeholder="Describe your topic"
+    ></textarea>
+
+    <button onclick="generateHook()">
+      Generate
+    </button>
+
+    <pre id="result"></pre>
+  `;
+}
   
   if (tool === "thumbnail") {
     app.innerHTML = `
@@ -158,30 +177,59 @@ window.generateHook = function() {
   const desc =
     document.getElementById("desc").value;
   
-  const hooks = [
-    
-    `You won't believe what happened with ${desc}...`,
-    
-    `This shocking story about ${desc} changed everything...`,
-    
-    `Nobody expected this truth about ${desc}...`,
-    
-    `The secret behind ${desc} remained hidden for years...`,
-    
-    `What happened next shocked everyone...`,
-    
-    `99% of people don't know this about ${desc}...`,
-    
-    `This mystery surrounding ${desc} is unbelievable...`,
-    
-    `The discovery of ${desc} changed history forever...`,
-    
-    `Scientists were stunned by ${desc}...`,
-    
-    `The truth about ${desc} will surprise you...`
-    
+const category =
+  document.getElementById("hookCategory").value;
+  
+  let hooks = [];
+
+if (category === "Horror") {
+  
+  hooks = [
+    `The terrifying truth about ${desc}...`,
+    `Nobody survived after ${desc}...`,
+    `What happened that night still remains unexplained...`,
+    `This horror story shocked everyone...`,
+    `The dark secret behind ${desc}...`
   ];
   
+}
+
+else if (category === "Mystery") {
+  
+  hooks = [
+    `Nobody could explain ${desc}...`,
+    `The mystery of ${desc} remains unsolved...`,
+    `What investigators found was shocking...`,
+    `The truth about ${desc} stayed hidden for years...`,
+    `A strange event changed everything...`
+  ];
+  
+}
+
+else if (category === "History") {
+  
+  hooks = [
+    `History tried to hide this story...`,
+    `Few people know the truth about ${desc}...`,
+    `This event changed the world forever...`,
+    `A forgotten chapter of history...`,
+    `What really happened during ${desc}?`
+  ];
+  
+}
+
+else {
+  
+  hooks = [
+    `You won't believe what happened with ${desc}...`,
+    `This shocking story about ${desc} changed everything...`,
+    `Nobody expected this truth about ${desc}...`,
+    `99% of people don't know this about ${desc}...`,
+    `The truth about ${desc} changed everything...`
+  ];
+  
+}
+
   let result = "";
   
   for (let i = 0; i < 5; i++) {
