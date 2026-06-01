@@ -254,13 +254,48 @@ else {
 }
 /* =================== */
 
-window.generateThumbnail = function() {
-  
-  const desc = document.getElementById("desc").value;
-  
+window.generateThumbnail = function(){
+
+  const desc =
+    document.getElementById("desc").value;
+
+  const texts = [
+    "SHOCKING DISCOVERY",
+    "THE TRUTH REVEALED",
+    "NOBODY EXPECTED THIS",
+    "FOUND AFTER YEARS",
+    "HIDDEN SECRET EXPOSED"
+  ];
+
+  const emotions = [
+    "😱 Shocked Face",
+    "😨 Fear",
+    "🤯 Mind Blown",
+    "😲 Surprise"
+  ];
+
+  const text =
+    texts[Math.floor(Math.random() * texts.length)];
+
+  const emotion =
+    emotions[Math.floor(Math.random() * emotions.length)];
+
   document.getElementById("result").innerText =
-    `Thumbnail Idea:
-${desc}`;
+
+`MAIN TEXT:
+${text}
+
+EMOTION:
+${emotion}
+
+SUBJECT:
+${desc}
+
+BACKGROUND:
+Cinematic Scene
+
+STYLE:
+High Contrast, Viral YouTube Thumbnail`;
 }
 
 /* INIT */
