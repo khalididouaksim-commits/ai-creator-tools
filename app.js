@@ -86,6 +86,10 @@ window.loadTool = function(tool) {
       Generate
     </button>
 
+<button onclick="copyResult()">
+  📋 Copy Hooks
+</button>
+
     <pre id="result"></pre>
   `;
 }
