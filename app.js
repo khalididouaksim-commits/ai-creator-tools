@@ -155,22 +155,47 @@ ${ending}`;
 
 window.generateHook = function() {
   
-  const desc = document.getElementById("desc").value;
+  const desc =
+    document.getElementById("desc").value;
   
   const hooks = [
-    "You won't believe this...",
-    "This shocked everyone...",
-    "Nobody expected this..."
+    
+    `You won't believe what happened with ${desc}...`,
+    
+    `This shocking story about ${desc} changed everything...`,
+    
+    `Nobody expected this truth about ${desc}...`,
+    
+    `The secret behind ${desc} remained hidden for years...`,
+    
+    `What happened next shocked everyone...`,
+    
+    `99% of people don't know this about ${desc}...`,
+    
+    `This mystery surrounding ${desc} is unbelievable...`,
+    
+    `The discovery of ${desc} changed history forever...`,
+    
+    `Scientists were stunned by ${desc}...`,
+    
+    `The truth about ${desc} will surprise you...`
+    
   ];
   
-  const random = hooks[Math.floor(Math.random() * hooks.length)];
+  let result = "";
+  
+  for (let i = 0; i < 5; i++) {
+    
+    const random =
+      hooks[Math.floor(Math.random() * hooks.length)];
+    
+    result += `${i + 1}. ${random}\n\n`;
+    
+  }
   
   document.getElementById("result").innerText =
-    `${random}
-
-${desc}`;
+    result;
 }
-
 /* =================== */
 
 window.generateThumbnail = function() {
