@@ -108,8 +108,6 @@ window.loadTool = function(tool) {
   Generate
 </button>
 
-<
-
 <button onclick="generateThumbnail()">
   🔄 Regenerate
 </button>
