@@ -116,7 +116,7 @@ window.loadTool = function(tool) {
   📋 Copy
 </button>
 
-      <pre id="result"></pre>
+<pre id="result"></pre>
     `;
   }
 }
