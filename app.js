@@ -289,6 +289,46 @@ else {
 }
 /* =================== */
 
+window.generateTitle = function(){
+
+  const desc =
+    document.getElementById("desc").value;
+
+  const titles = [
+
+    `The Shocking Truth About ${desc}`,
+
+    `${desc} Explained in 5 Minutes`,
+
+    `Nobody Expected This About ${desc}`,
+
+    `The Mystery Behind ${desc}`,
+
+    `${desc}: What Really Happened?`,
+
+    `The Untold Story of ${desc}`,
+
+    `This Discovery Changed Everything`,
+
+    `${desc} Will Blow Your Mind`
+
+  ];
+
+  let result = "";
+
+  for(let i = 0; i < 5; i++){
+
+    const random =
+      titles[Math.floor(Math.random() * titles.length)];
+
+    result += `${i + 1}. ${random}\n\n`;
+
+  }
+
+  document.getElementById("result").innerText =
+    result;
+}
+
 window.generateThumbnail = function(){
 
   const desc =
