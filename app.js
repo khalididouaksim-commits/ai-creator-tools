@@ -98,6 +98,31 @@ window.loadTool = function(tool) {
   `;
 }
   
+  if (tool === "title") {
+  app.innerHTML = `
+    <h1>Title Generator</h1>
+
+    <textarea
+      id="desc"
+      placeholder="Describe your video"
+    ></textarea>
+
+    <button onclick="generateTitle()">
+      Generate
+    </button>
+
+    <button onclick="generateTitle()">
+      🔄 Regenerate
+    </button>
+
+    <button onclick="copyResult()">
+      📋 Copy
+    </button>
+
+    <pre id="result"></pre>
+  `;
+}
+  
   if (tool === "thumbnail") {
     app.innerHTML = `
       <h1>Thumbnail Generator</h1>
